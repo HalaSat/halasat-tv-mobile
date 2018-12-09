@@ -6,8 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
-
-List<Channel> buildChannelsList({@required Object jsonData}) {
+List<Channel> buildChannelsList({@required List<Map<String, String>> jsonData}) {
   final List<Map<String, String>> channelsRawList = channels;
   final List<Channel> channelsList = List<Channel>();
   channelsRawList.forEach((map) {
@@ -17,8 +16,12 @@ List<Channel> buildChannelsList({@required Object jsonData}) {
   return channelsList;
 }
 
-
-void getRawChannelsData() {
-  http.get("http://91.106.32.84/api.php").then((res){print(json.decode((res.body).toString()));});
+void getRawChannelsData(String url) {
+  http.get(url).then((res) {
+    List<Map<String, String>> temp = json.decode((res.body));
+    print(temp);
+    List<Channel> channels = buildChannelsList(jsonData:temp);
+    return channels;
+    
+  });
 }
-
