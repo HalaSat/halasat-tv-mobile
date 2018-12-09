@@ -1,9 +1,18 @@
 import 'package:flutter/foundation.dart';
 
-
-
 class Channel {
-// constructor
+  int id;
+  String title;
+  String imageUrl;
+  String streamName;
+  String category;
+  String color;
+  String app;
+  int epg;
+  int type;
+  int order;
+  int enable;
+
   Channel({@required Map<String, String> channelData}) {
     app = channelData['app'];
     id = int.parse(channelData['id']);
@@ -17,16 +26,4 @@ class Channel {
     enable = int.parse(channelData['enable']);
     type = int.parse(channelData['type']);
   }
-// properties
-  int id;
-  String title;
-  String imageUrl;
-  String streamName;
-  String category;
-  String color;
-  String app;
-  int epg;
-  int type;
-  int order;
-  int enable;
 }

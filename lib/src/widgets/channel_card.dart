@@ -23,7 +23,7 @@ class ChannelCard extends StatelessWidget {
                   'http://tv.halasat.net/images/' + data["image"],
               placeholder: 'assets/placeholder.png',
             ),
-            Text(data["title"])
+            Text(data["title"], style: TextStyle(color: Colors.blueGrey),)
           ])),
       onPressed: () {
         Navigator.push(

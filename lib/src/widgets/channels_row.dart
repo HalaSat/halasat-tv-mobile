@@ -25,7 +25,7 @@ class ChannelsRow extends StatelessWidget {
                 category.toUpperCase(),
                 style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w300),
               )),
-          Divider(),
+          // Divider(color: Colors.blue),
           Container(
             height: 180.0,
             margin: EdgeInsets.only(top: 5.0, bottom: 5.0),

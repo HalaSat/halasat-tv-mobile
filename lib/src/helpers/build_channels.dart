@@ -20,8 +20,7 @@ void getRawChannelsData(String url) {
   http.get(url).then((res) {
     List<Map<String, String>> temp = json.decode((res.body));
     print(temp);
-    List<Channel> channels = buildChannelsList(jsonData:temp);
+    List<Channel> channels = buildChannelsList(jsonData: temp);
     return channels;
-    
   });
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import './src/screens/home.dart';
-import './src/helpers/build_channels.dart';
-
+// import './src/helpers/build_channels.dart';
 
 void main() {
   runApp(App());
@@ -10,14 +9,30 @@ void main() {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-   getRawChannelsData();
-  final String t = "title";
     return MaterialApp(
-      title:t,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.tv)),
+                Tab(icon: Icon(Icons.book)),
+              ],
+            ),
+            title: Text('HalaSat TV'),
+          ),
+          body: TabBarView(
+            children: [
+              HomeScreen(),
+              Icon(
+                Icons.book,
+                color: Colors.grey,
+              ),
+            ],
+          ),
+        ),
       ),
-      home: HomeScreen(),
     );
   }
 }
