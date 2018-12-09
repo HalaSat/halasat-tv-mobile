@@ -15,11 +15,13 @@ class ChannelCard extends StatelessWidget {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-            Image(
+            FadeInImage(
               height: 150.0,
               width: 150.0,
-              fit: BoxFit.fitWidth,
-              image: NetworkImage('http://tv.halasat.net/uploads/bein1.png'),
+              fit: BoxFit.cover,
+              image:
+                  NetworkImage('http://tv.halasat.net/images/' + data["image"]),
+              placeholder: AssetImage('assets/placeholder.png'),
             ),
             Text(data["title"])
           ])),
