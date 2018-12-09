@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import './channel_card.dart';
 
 class ChannelsRow extends StatelessWidget {

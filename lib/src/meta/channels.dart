@@ -519,19 +519,19 @@ List<Map<String, String>> channels = [
     "app": "nile",
     "epg": "0"
   },
-  {
-    "id": "174",
-    "title": "Al-Arabiya",
-    "image": "uploads/arabiya.png",
-    "streamname": "al-arabiya",
-    "type": "0",
-    "vorder": "116",
-    "enable": "1",
-    "cat": "Entertainment",
-    "color": "",
-    "app": "nile",
-    "epg": "0"
-  },
+  // {
+  //   "id": "174",
+  //   "title": "Al-Arabiya",
+  //   "image": "uploads/arabiya.png",
+  //   "streamname": "al-arabiya",
+  //   "type": "0",
+  //   "vorder": "116",
+  //   "enable": "1",
+  //   "cat": "Entertainment",
+  //   "color": "",
+  //   "app": "nile",
+  //   "epg": "0"
+  // },
   {
     "id": "177",
     "title": "Cinema",
