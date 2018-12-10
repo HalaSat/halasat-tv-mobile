@@ -5,6 +5,7 @@ class ChannelsRow extends StatelessWidget {
   final List<Map<String, String>> channels;
   final String category;
   final IconData icon;
+  final String excerpt;
   // filter channels by category
   static List<Map<String, String>> filterChannels(
       String cat, List<Map<String, String>> channels) {
@@ -16,6 +17,7 @@ class ChannelsRow extends StatelessWidget {
 
   ChannelsRow({
     this.category,
+    @required this.excerpt,
     @required this.icon,
     @required this.channels,
   });
@@ -37,9 +39,17 @@ class ChannelsRow extends StatelessWidget {
                 ),
                 Text(
                   category.toUpperCase(),
-                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
                 )
               ])),
+          Container(
+            margin: EdgeInsets.all(10.0),
+            child: Text(
+              excerpt,
+              style: TextStyle(
+                  fontWeight: FontWeight.w300, color: Colors.grey[600]),
+            ),
+          ),
           // Divider(color: Colors.blue),
           Container(
             height: 180.0,

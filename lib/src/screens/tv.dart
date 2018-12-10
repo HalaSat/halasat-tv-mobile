@@ -10,18 +10,40 @@ class TVScreen extends StatelessWidget {
       padding: EdgeInsets.only(top: 10.0),
       children: <Widget>[
         ChannelsRow(
-            category: 'Recent', icon: Icons.history, channels: channels),
+            category: 'Recent',
+            excerpt: 'Your watch history',
+            icon: Icons.history,
+            channels: channels),
         ChannelsRow(
-            category: 'Sports', icon: Icons.directions_run, channels: channels),
+            category: 'Recommended',
+            excerpt: 'Recommended channels based on your watch history',
+            icon: Icons.explore,
+            channels: channels),
+        ChannelsRow(
+            category: 'Sports',
+            excerpt: 'Top Sport channels',
+            icon: Icons.directions_run,
+            channels: channels),
         ChannelsRow(
             category: 'Entertainment',
+            excerpt: 'News, Science, TV shows and many others',
             icon: Icons.featured_video,
             channels: channels),
-        ChannelsRow(category: 'Movies', icon: Icons.movie, channels: channels),
         ChannelsRow(
-            category: 'Kids', icon: Icons.child_care, channels: channels),
+            category: 'Movies',
+            excerpt: 'Top channels for movie lovers',
+            icon: Icons.movie,
+            channels: channels),
         ChannelsRow(
-            category: 'Music', icon: Icons.music_note, channels: channels),
+            category: 'Kids',
+            excerpt: 'Channels tailored just for kids',
+            icon: Icons.child_care,
+            channels: channels),
+        ChannelsRow(
+            category: 'Music',
+            excerpt: 'Enjoy the beats with top music channels',
+            icon: Icons.music_note,
+            channels: channels),
       ],
     ));
   }
