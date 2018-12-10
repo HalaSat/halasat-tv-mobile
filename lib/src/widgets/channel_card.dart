@@ -19,11 +19,12 @@ class ChannelCard extends StatelessWidget {
               height: 150.0,
               width: 150.0,
               fit: BoxFit.cover,
-              image:
-                  'http://tv.halasat.net/images/' + data["image"],
+              image: 'http://tv.halasat.net/images/' + data["image"],
               placeholder: 'assets/placeholder.png',
             ),
-            Text(data["title"], style: TextStyle(color: Colors.blueGrey),)
+            Text(
+              data["title"],
+            )
           ])),
       onPressed: () {
         Navigator.push(

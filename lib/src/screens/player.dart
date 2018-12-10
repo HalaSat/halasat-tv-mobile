@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './home.dart';
+import './tv.dart';
 
 class PlayerScreen extends StatelessWidget {
   @override
@@ -12,7 +12,7 @@ class PlayerScreen extends StatelessWidget {
         child: RaisedButton(
           onPressed: () {
             Navigator.pop(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                context, MaterialPageRoute(builder: (context) => TVScreen()));
           },
           child: Text('Go home!'),
         ),

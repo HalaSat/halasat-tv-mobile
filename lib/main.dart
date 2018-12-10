@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import './src/screens/home.dart';
-import './src/screens/players_info.dart';
+import './src/screens/tv.dart';
+import './src/screens/players_list.dart';
 
 void main() {
   runApp(App());
 }
 
 class App extends StatelessWidget {
-  final FocusNode node = FocusNode();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // theme: ThemeData.dark(),
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -26,8 +26,8 @@ class App extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              HomeScreen(),
-              PlayersInfoScreen(),
+              TVScreen(),
+              PlayersListScreen(),
             ],
           ),
         ),
