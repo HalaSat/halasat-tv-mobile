@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        maven { url 'https://repo.spring.io/libs-release'}
         google()
         jcenter()
     }
@@ -11,11 +12,10 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://repo.spring.io/libs-release'}
         google()
         jcenter()
-        maven {
-            url 'https://google.bintray.com/exoplayer/'
-        }
+        
     }
 }
 
