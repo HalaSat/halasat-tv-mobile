@@ -6,6 +6,7 @@ class ChannelsRow extends StatelessWidget {
   final String category;
   final IconData icon;
   final String excerpt;
+  final Color iconColor;
   // filter channels by category
   static List<Map<String, String>> filterChannels(
       String cat, List<Map<String, String>> channels) {
@@ -20,6 +21,7 @@ class ChannelsRow extends StatelessWidget {
     @required this.excerpt,
     @required this.icon,
     @required this.channels,
+    this.iconColor = Colors.blue,
   });
 
   @override
@@ -31,19 +33,27 @@ class ChannelsRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-              margin: EdgeInsets.only(left: 5.0),
+              margin: EdgeInsets.only(left: 15.0),
               child: Row(children: [
                 Container(
                   margin: EdgeInsets.only(right: 5.0),
-                  child: Icon(icon),
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                    size: 25.0,
+                  ),
                 ),
                 Text(
                   category.toUpperCase(),
-                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w300,
+                    // color: iconColor
+                  ),
                 )
               ])),
           Container(
-            margin: EdgeInsets.all(10.0),
+            margin: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
             child: Text(
               excerpt,
               style: TextStyle(
@@ -52,13 +62,17 @@ class ChannelsRow extends StatelessWidget {
           ),
           // Divider(color: Colors.blue),
           Container(
-            height: 180.0,
+            height: 173.0,
             margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
-                return ChannelCard(items[index]);
+                bool isLastChild = items.length == index + 1;
+                return ChannelCard(
+                  data: items[index],
+                  isLastChild: isLastChild,
+                );
               },
             ),
           ),
