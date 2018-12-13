@@ -5,6 +5,7 @@ import '../screens/player.dart';
 class ChannelCard extends StatelessWidget {
   final Map<String, String> data;
   final bool isLastChild;
+
   ChannelCard({@required this.data, this.isLastChild = false});
 
   @override
