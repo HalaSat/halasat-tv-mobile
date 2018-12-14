@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import './channel_card.dart';
 
 class ChannelsRow extends StatelessWidget {
@@ -7,6 +8,7 @@ class ChannelsRow extends StatelessWidget {
   final IconData icon;
   final String excerpt;
   final Color iconColor;
+  final onCardPressed;
   // filter channels by category
   static List<Map<String, String>> filterChannels(
       String cat, List<Map<String, String>> channels) {
@@ -17,10 +19,11 @@ class ChannelsRow extends StatelessWidget {
   }
 
   ChannelsRow({
-    this.category,
+    @required this.category,
     @required this.excerpt,
     @required this.icon,
     @required this.channels,
+    @required this.onCardPressed,
     this.iconColor = Colors.blue,
   });
 
@@ -40,14 +43,14 @@ class ChannelsRow extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: iconColor,
-                    size: 25.0,
+                    size: 20.0,
                   ),
                 ),
                 Text(
                   category.toUpperCase(),
                   style: TextStyle(
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.w300,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.normal,
                     // color: iconColor
                   ),
                 )
@@ -72,6 +75,7 @@ class ChannelsRow extends StatelessWidget {
                 return ChannelCard(
                   data: items[index],
                   isLastChild: isLastChild,
+                  onPressed: (data, context) => onCardPressed(data, context),
                 );
               },
             ),

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
+import '../meta/channels.dart';
+import '../widgets/channels_row.dart';
+
 class PlayerScreen extends StatefulWidget {
   final Map data;
+
   PlayerScreen(this.data);
 
   @override
@@ -12,6 +16,7 @@ class PlayerScreen extends StatefulWidget {
 
 class PlayerScreenState extends State<PlayerScreen> {
   VideoPlayerController _controller;
+
   @override
   void initState() {
     super.initState();
@@ -19,6 +24,7 @@ class PlayerScreenState extends State<PlayerScreen> {
     String streamName = widget.data['streamname'];
     _controller = VideoPlayerController.network(
       'http://192.168.37.2:1935/$app/${streamName}_adaptive.m3u8',
+//      'http://stream.shabakaty.com:6001/sport/ch22/ch22_360.m3u8',
     );
   }
 
@@ -39,7 +45,7 @@ class PlayerScreenState extends State<PlayerScreen> {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: Column(children: <Widget>[
+        body: ListView(children: <Widget>[
           Chewie(
             _controller,
             aspectRatio: 16 / 9,
@@ -73,16 +79,51 @@ class PlayerScreenState extends State<PlayerScreen> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(title),
+                            Text(title,
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             Opacity(
                                 opacity: .5,
-                                child: Text(
-                                  category,
-                                ))
+                                child: Row(children: <Widget>[
+                                  Icon(
+                                    Icons.category,
+                                    size: 13,
+                                  ),
+                                  Text(
+                                    category.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  )
+                                ])),
                           ]))
                 ],
               )),
           Divider(),
+          // todo: fix leak
+          ChannelsRow(
+              category: 'Recommended',
+              excerpt: 'Explore new channels based on your watch history',
+              icon: Icons.explore,
+              onCardPressed: (data, context) {
+                setState(() {
+                  _controller = VideoPlayerController.network(
+                    'http://stream.shabakaty.com:6001/sport/ch20/ch20_360.m3u8', // todo: change to data url
+                  );
+                });
+              },
+              channels: channels),
+          ChannelsRow(
+              category: category,
+              excerpt: 'Top sports channels',
+              icon: Icons.explore,
+              onCardPressed: (data, context) {
+                setState(() {
+                  _controller = VideoPlayerController.network(
+                    'http://stream.shabakaty.com:6001/sport/ch22/ch22_360.m3u8', // todo: change to data url
+                  );
+                });
+              },
+              channels: channels)
         ]));
   }
 }
