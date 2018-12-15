@@ -1,13 +1,13 @@
 import 'dart:convert';
 import '../meta/channels.dart';
-import '../models/channels.dart';
+import '../models/channel.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
-List<Channel> buildChannelsList({@required List<Map<String, String>> jsonData}) {
-  final List<Map<String, String>> channelsRawList = channels;
+List<Channel> _buildChannelsList({@required List<dynamic> jsonData}) {
+  final List<dynamic> channelsRawList = channels;
   final List<Channel> channelsList = List<Channel>();
   channelsRawList.forEach((map) {
     Channel channel = Channel(channelData: map);
@@ -16,11 +16,12 @@ List<Channel> buildChannelsList({@required List<Map<String, String>> jsonData}) 
   return channelsList;
 }
 
-void getRawChannelsData(String url) {
-  http.get(url).then((res) {
-    List<Map<String, String>> temp = json.decode((res.body));
-    print(temp);
-    List<Channel> channels = buildChannelsList(jsonData: temp);
-    return channels;
+ Future<List<Channel>> getRawChannelsData(String url) async {
+ List<Channel> channels ;
+  await http.get(url).then((res) {
+    List<dynamic> temp = json.decode((res.body));
+    channels = _buildChannelsList(jsonData: temp);
   });
+  channels.length;
+  return channels;
 }
