@@ -43,14 +43,14 @@ class ChannelsRow extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: iconColor,
-                    size: 20.0,
+                    size: 15.0,
                   ),
                 ),
                 Text(
                   category.toUpperCase(),
                   style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.normal,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
                     // color: iconColor
                   ),
                 )
@@ -68,6 +68,7 @@ class ChannelsRow extends StatelessWidget {
             height: 173.0,
             margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
             child: ListView.builder(
+              physics: BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
