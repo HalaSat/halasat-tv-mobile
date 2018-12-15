@@ -2,7 +2,6 @@ import 'dart:async';
 
 import './chewie_progress_colors.dart';
 import './material_progress_bar.dart';
-import './utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -346,12 +345,7 @@ class _MaterialControlsState extends State<MaterialControls> {
 
             _startHideTimer();
           },
-          colors: widget.progressColors ??
-              new ChewieProgressColors(
-                  playedColor: Theme.of(context).accentColor,
-                  handleColor: Theme.of(context).accentColor,
-                  bufferedColor: Theme.of(context).backgroundColor,
-                  backgroundColor: Theme.of(context).disabledColor),
+            colors: null
         ),
       ),
     );

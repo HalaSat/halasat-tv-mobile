@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChannelCard extends StatelessWidget {
   final Map<String, String> data;
@@ -38,7 +39,26 @@ class ChannelCard extends StatelessWidget {
                           fontSize: 12.0, fontWeight: FontWeight.w300),
                     )),
               ])),
-          onPressed: () => onPressed(data, context),
+          onPressed: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            List<String> recent = new List<String>.from(
+                await prefs.get('recent')) ?? List<String>();
+            if (recent.isNotEmpty) {
+              if (recent.last != data['id']) recent.add(data['id']);
+            } else
+              recent.add(data['id']);
+            await prefs.setStringList('recent', recent);
+            print('''
+            ########
+            ********
+            --------
+                  recent: $recent
+            --------     
+            ********
+            ########   
+            ''',);
+            onPressed(data, context);
+          },
         ));
   }
 }

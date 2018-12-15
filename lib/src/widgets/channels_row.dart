@@ -9,10 +9,11 @@ class ChannelsRow extends StatelessWidget {
   final String excerpt;
   final Color iconColor;
   final onCardPressed;
+
   // filter channels by category
   static List<Map<String, String>> filterChannels(
       String cat, List<Map<String, String>> channels) {
-    List items = channels
+    List<Map<String, String>> items = channels
         .where((Map<String, String> item) => item["cat"] == cat)
         .toList();
     return items.isNotEmpty ? items : channels;

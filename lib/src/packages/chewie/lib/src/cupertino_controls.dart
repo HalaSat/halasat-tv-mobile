@@ -433,33 +433,7 @@ class _CupertinoControlsState extends State<CupertinoControls> {
           onDragEnd: () {
             _startHideTimer();
           },
-          colors: widget.progressColors ??
-              new ChewieProgressColors(
-                playedColor: new Color.fromARGB(
-                  120,
-                  255,
-                  255,
-                  255,
-                ),
-                handleColor: new Color.fromARGB(
-                  255,
-                  255,
-                  255,
-                  255,
-                ),
-                bufferedColor: new Color.fromARGB(
-                  60,
-                  255,
-                  255,
-                  255,
-                ),
-                backgroundColor: new Color.fromARGB(
-                  20,
-                  255,
-                  255,
-                  255,
-                ),
-              ),
+            colors: null
         ),
       ),
     );

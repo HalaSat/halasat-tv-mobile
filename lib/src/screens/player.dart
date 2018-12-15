@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import '../packages/chewie/lib/chewie.dart';
 
+import '../packages/chewie/lib/chewie.dart';
 import '../meta/channels.dart';
 import '../widgets/channels_row.dart';
 
@@ -20,6 +20,7 @@ class PlayerScreenState extends State<PlayerScreen> {
   String _title;
   String _category;
   String _imageUrl;
+
   @override
   void initState() {
     super.initState();

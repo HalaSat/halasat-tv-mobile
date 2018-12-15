@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/player.dart';
 import '../widgets/channels_row.dart';
 
-class ChannelsRowList extends StatelessWidget {
+class ChannelsRowList extends StatefulWidget {
   final List<Map<String, String>> _channels;
 
   _onCardPressed(Map data, BuildContext context) {
@@ -14,17 +14,46 @@ class ChannelsRowList extends StatelessWidget {
   ChannelsRowList(this._channels);
 
   @override
+  ChannelsRowListState createState() {
+    return ChannelsRowListState();
+  }
+}
+
+class ChannelsRowListState extends State<ChannelsRowList> {
+  List<Map<String, String>> _recentChannels;
+
+  @override
+  void initState() {
+    super.initState();
+    _setRecentChannels(widget._channels);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var _onCardPressed = widget._onCardPressed;
+    var _channels = widget._channels;
     return ListView(
       padding: EdgeInsets.only(top: 10.0),
       children: <Widget>[
-        ChannelsRow(
+        RaisedButton(
+          color: Colors.red,
+          child: Text(
+            'Refresh',
+            style: TextStyle(color: Colors.white),
+          ),
+          onPressed: () => _setRecentChannels(_channels),
+        ),
+        _recentChannels != null
+            ? ChannelsRow(
             category: 'Recent',
             excerpt: 'Your watch history',
             icon: Icons.history,
             onCardPressed: _onCardPressed,
             iconColor: Colors.purple,
-            channels: _channels),
+            channels: _recentChannels)
+            : Center(
+          child: CircularProgressIndicator(),
+        ),
         // ChannelsRow(
         //     category: 'Recommended',
         //     excerpt: 'Recommended channels based on your watch history',
@@ -69,5 +98,29 @@ class ChannelsRowList extends StatelessWidget {
             channels: _channels),
       ],
     );
+  }
+
+  _setRecentChannels(List<Map<String, String>> channels) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> recent = new List<String>.from(await prefs.get('recent'));
+    List<Map<String, String>> recentChannels = recent
+        .map((itemId) =>
+    channels.where((channel) => channel['id'] == itemId).toList()[0])
+        .toList();
+    setState(() {
+      _recentChannels =
+      new List<Map<String, String>>.from(recentChannels.reversed);
+      print(
+        '''
+            ########
+            ********
+            --------
+                  recentChannels: $_recentChannels
+            --------     
+            ********
+            ########   
+            ''',
+      );
+    });
   }
 }
