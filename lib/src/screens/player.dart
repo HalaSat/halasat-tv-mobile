@@ -36,8 +36,6 @@ class PlayerScreenState extends State<PlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String app = widget.data['app'];
-    final String streamName = widget.data['streamname'];
     final String title = widget.data['title'];
     final String category = widget.data['cat'];
     final String imageUrl =
@@ -107,17 +105,14 @@ class PlayerScreenState extends State<PlayerScreen> {
               excerpt: 'Explore new channels based on your watch history',
               icon: Icons.explore,
               onCardPressed: (data, context) {
-                String channelApp = data['app'];
-                String channelStreamName = data['streamname'];
-                String prevUrl =
+                String app = data['app'];
+                String streamName = data['streamname'];
+                String url =
                     'http://192.168.37.2:1935/${app}/${streamName}_adaptive.m3u8';
-                String currentUrl =
-                    'http://192.168.37.2:1935/${channelApp}/${channelStreamName}_adaptive.m3u8';
-                print(_controller.dataSource);
-                if (currentUrl != prevUrl)
+                if (url != _controller.dataSource)
                   setState(() {
                     _controller = VideoPlayerController.network(
-                      currentUrl,
+                      url,
                     );
                   });
               },
