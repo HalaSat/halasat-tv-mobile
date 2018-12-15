@@ -36,6 +36,8 @@ class PlayerScreenState extends State<PlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String app = widget.data['app'];
+    final String streamName = widget.data['streamname'];
     final String title = widget.data['title'];
     final String category = widget.data['cat'];
     final String imageUrl =
@@ -105,25 +107,36 @@ class PlayerScreenState extends State<PlayerScreen> {
               excerpt: 'Explore new channels based on your watch history',
               icon: Icons.explore,
               onCardPressed: (data, context) {
-                setState(() {
-                  _controller = VideoPlayerController.network(
-                    'http://stream.shabakaty.com:6001/sport/ch20/ch20_360.m3u8', // todo: change to data url
-                  );
-                });
+                String channelApp = data['app'];
+                String channelStreamName = data['streamname'];
+                String prevUrl =
+                    'http://192.168.37.2:1935/${app}/${streamName}_adaptive.m3u8';
+                String currentUrl =
+                    'http://192.168.37.2:1935/${channelApp}/${channelStreamName}_adaptive.m3u8';
+                print(_controller.dataSource);
+                if (currentUrl != prevUrl)
+                  setState(() {
+                    _controller = VideoPlayerController.network(
+                      currentUrl,
+                    );
+                  });
               },
               channels: channels),
-          ChannelsRow(
-              category: category,
-              excerpt: 'Top sports channels',
-              icon: Icons.explore,
-              onCardPressed: (data, context) {
-                setState(() {
-                  _controller = VideoPlayerController.network(
-                    'http://stream.shabakaty.com:6001/sport/ch22/ch22_360.m3u8', // todo: change to data url
-                  );
-                });
-              },
-              channels: channels)
+          // ChannelsRow(
+          //     category: category,
+          //     excerpt: 'Top sports channels',
+          //     icon: Icons.explore,
+          //     onCardPressed: (data, context) {
+          //       String app = data['app'];
+          //       String streamName = data['streamname'];
+          //         _controller.dispose();
+          //       setState(() {
+          //         _controller = VideoPlayerController.network(
+          //           'http://192.168.37.2:1935/$app/${streamName}_adaptive.m3u8', // todo: change to data url
+          //         );
+          //       });
+          //     },
+          //     channels: channels)
         ]));
   }
 }
