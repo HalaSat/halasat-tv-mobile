@@ -6,9 +6,10 @@ class ChannelCard extends StatelessWidget {
   final bool isLastChild;
   final onPressed;
 
-  ChannelCard({@required this.data,
-    @required this.onPressed,
-    this.isLastChild = false});
+  ChannelCard(
+      {@required this.data,
+      @required this.onPressed,
+      this.isLastChild = false});
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +22,16 @@ class ChannelCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    DecoratedBox(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: .2)),
-                        child: FadeInImage.assetNetwork(
-                          height: 150.0,
-                          width: 150.0,
-                          fit: BoxFit.cover,
-                          image: 'http://91.106.32.84/images/' + data["image"],
-                          placeholder: 'assets/placeholder.png',
-                        )),
+                DecoratedBox(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: .2)),
+                    child: FadeInImage.assetNetwork(
+                      height: 150.0,
+                      width: 150.0,
+                      fit: BoxFit.cover,
+                      image: 'http://91.106.32.84/images/' + data["image"],
+                      placeholder: 'assets/placeholder.png',
+                    )),
                 Container(
                     margin: EdgeInsets.only(top: 5.0),
                     child: Text(
@@ -42,13 +43,12 @@ class ChannelCard extends StatelessWidget {
           onPressed: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             List<String> recent = new List<String>.from(
-                await prefs.get('recent')) ?? List<String>();
-            if (recent.isNotEmpty) {
-              if (recent.last != data['id']) recent.add(data['id']);
-            } else
-              recent.add(data['id']);
+                await prefs.get('recent') ?? List<String>());
+            recent.add(data['id']);
+
             await prefs.setStringList('recent', recent);
-            print('''
+            print(
+              '''
             ########
             ********
             --------
@@ -56,7 +56,8 @@ class ChannelCard extends StatelessWidget {
             --------     
             ********
             ########   
-            ''',);
+            ''',
+            );
             onPressed(data, context);
           },
         ));

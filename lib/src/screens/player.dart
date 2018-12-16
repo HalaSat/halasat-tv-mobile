@@ -8,7 +8,6 @@ import '../widgets/channels_row.dart';
 class PlayerScreen extends StatefulWidget {
   final String imagesDirectory = 'http://91.106.32.84/images/';
   final Map data;
-
   PlayerScreen(this.data);
 
   @override
@@ -89,24 +88,25 @@ class PlayerScreenState extends State<PlayerScreen> {
           category: _category,
           excerpt: 'Recommended channels',
           icon: Icons.explore,
-          onCardPressed: (data, context) {
-            String title = data['title'];
-            String category = data['cat'];
-            String app = data['app'];
-            String streamName = data['streamname'];
-            String url =
-                'http://192.168.37.2:1935/${app}/${streamName}_adaptive.m3u8';
-            if (url != _controller.dataSource)
-              setState(() {
-                _title = title;
-                _category = category;
-                _imageUrl = widget.imagesDirectory + data['image'];
-                _controller = VideoPlayerController.network(
-                  url,
-                );
-              });
-          },
+          onCardPressed: _onCardPressed,
           channels: channels),
     ]));
+  }
+
+  _onCardPressed(data, context) {
+    String title = data['title'];
+    String category = data['cat'];
+    String app = data['app'];
+    String streamName = data['streamname'];
+    String url = 'http://192.168.37.2:1935/${app}/${streamName}_adaptive.m3u8';
+    if (url != _controller.dataSource)
+      setState(() {
+        _title = title;
+        _category = category;
+        _imageUrl = widget.imagesDirectory + data['image'];
+        _controller = VideoPlayerController.network(
+          url,
+        );
+      });
   }
 }

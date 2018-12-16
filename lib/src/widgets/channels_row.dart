@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './channel_card.dart';
+import '../models/channel.dart';
 
 class ChannelsRow extends StatelessWidget {
   final List<Map<String, String>> channels;

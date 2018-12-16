@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../meta/channels.dart';
 import '../widgets/channels_row_list.dart';

@@ -103,6 +103,9 @@ class _MaterialControlsState extends State<MaterialControls> {
           children: <Widget>[
             _buildPlayPause(controller),
             _buildPosition(iconColor),
+            Expanded(
+              child: Text(''),
+            ),
             _buildMuteButton(controller),
             _buildExpandButton(),
           ],
@@ -238,15 +241,26 @@ class _MaterialControlsState extends State<MaterialControls> {
     //     : Duration.zero;
 
     return new Padding(
-      padding: new EdgeInsets.only(right: 24.0),
-      child: new Text(
-        'Live',
-        style: new TextStyle(
-          fontSize: 14.0,
-          color: Colors.red,
-        ),
-      ),
-    );
+        padding: new EdgeInsets.only(right: 24.0),
+        child: new Row(
+          children: [
+            new Padding(
+              padding: EdgeInsets.only(right: 5.0),
+              child: new Icon(
+                Icons.brightness_1,
+                size: 14.0,
+                color: Colors.red,
+              ),
+            ),
+            new Text(
+              'Live',
+              style: new TextStyle(
+                fontSize: 14.0,
+                color: Colors.red,
+              ),
+            )
+          ],
+        ));
   }
 
   void _cancelAndRestartTimer() {
@@ -329,24 +343,19 @@ class _MaterialControlsState extends State<MaterialControls> {
     return new Expanded(
       child: new Padding(
         padding: new EdgeInsets.only(right: 20.0),
-        child: new MaterialVideoProgressBar(
-          widget.controller,
-          onDragStart: () {
-            setState(() {
-              _dragging = true;
-            });
+        child: new MaterialVideoProgressBar(widget.controller, onDragStart: () {
+          setState(() {
+            _dragging = true;
+          });
 
-            _hideTimer?.cancel();
-          },
-          onDragEnd: () {
-            setState(() {
-              _dragging = false;
-            });
+          _hideTimer?.cancel();
+        }, onDragEnd: () {
+          setState(() {
+            _dragging = false;
+          });
 
-            _startHideTimer();
-          },
-            colors: null
-        ),
+          _startHideTimer();
+        }, colors: null),
       ),
     );
   }

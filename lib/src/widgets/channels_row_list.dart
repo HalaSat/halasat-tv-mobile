@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../screens/player.dart';
+
 import '../widgets/channels_row.dart';
+import '../screens/player.dart';
 
 class ChannelsRowList extends StatefulWidget {
   final List<Map<String, String>> _channels;
-
-  _onCardPressed(Map data, BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => PlayerScreen(data)));
-  }
 
   ChannelsRowList(this._channels);
 
@@ -20,7 +16,7 @@ class ChannelsRowList extends StatefulWidget {
 }
 
 class ChannelsRowListState extends State<ChannelsRowList> {
-  List<Map<String, String>> _recentChannels;
+  List<Map<String, String>> _recentChannels = [];
 
   @override
   void initState() {
@@ -30,37 +26,19 @@ class ChannelsRowListState extends State<ChannelsRowList> {
 
   @override
   Widget build(BuildContext context) {
-    var _onCardPressed = widget._onCardPressed;
     var _channels = widget._channels;
     return ListView(
-      padding: EdgeInsets.only(top: 10.0),
+      // padding: EdgeInsets.only(top: 10.0),
       children: <Widget>[
-        RaisedButton(
-          color: Colors.red,
-          child: Text(
-            'Refresh',
-            style: TextStyle(color: Colors.white),
-          ),
-          onPressed: () => _setRecentChannels(_channels),
-        ),
-        _recentChannels != null
+        _recentChannels.isNotEmpty
             ? ChannelsRow(
-            category: 'Recent',
-            excerpt: 'Your watch history',
-            icon: Icons.history,
-            onCardPressed: _onCardPressed,
-            iconColor: Colors.purple,
-            channels: _recentChannels)
-            : Center(
-          child: CircularProgressIndicator(),
-        ),
-        // ChannelsRow(
-        //     category: 'Recommended',
-        //     excerpt: 'Recommended channels based on your watch history',
-        //     icon: Icons.explore,
-        //     onCardPressed: _onCardPressed,
-        //     iconColor: Colors.indigo,
-        //     channels: _channels),
+                category: 'Recent',
+                excerpt: 'Your watch history',
+                icon: Icons.history,
+                onCardPressed: _onCardPressed,
+                iconColor: Colors.purple,
+                channels: _recentChannels)
+            : Text(''),
         ChannelsRow(
             category: 'Sports',
             excerpt: 'Top Sport channels',
@@ -102,25 +80,33 @@ class ChannelsRowListState extends State<ChannelsRowList> {
 
   _setRecentChannels(List<Map<String, String>> channels) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> recent = new List<String>.from(await prefs.get('recent'));
-    List<Map<String, String>> recentChannels = recent
-        .map((itemId) =>
-    channels.where((channel) => channel['id'] == itemId).toList()[0])
-        .toList();
+    List<String> recent =
+        new List<String>.from((await prefs.get('recent')) ?? []);
+    List<Map<String, String>> recentChannels = recent.reversed
+        .toSet() // remove duplicates
+        .toList() // convert the set to a list
+        .map((itemId) => // map each id to a channel
+            channels.where((channel) => channel['id'] == itemId).toList()[0])
+        .toList(); // convert iterable to a list
+
     setState(() {
-      _recentChannels =
-      new List<Map<String, String>>.from(recentChannels.reversed);
+      _recentChannels = new List<Map<String, String>>.from(recentChannels);
       print(
         '''
             ########
             ********
             --------
                   recentChannels: $_recentChannels
-            --------     
+            --------
             ********
-            ########   
+            ########
             ''',
       );
     });
+  }
+
+  _onCardPressed(Map data, BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => PlayerScreen(data)));
   }
 }
