@@ -4,7 +4,7 @@ import './channel_card.dart';
 import '../models/channel.dart';
 
 class ChannelsRow extends StatelessWidget {
-  final List<Map<String, String>> channels;
+  final List<Channel> channels;
   final String category;
   final IconData icon;
   final String excerpt;
@@ -12,11 +12,9 @@ class ChannelsRow extends StatelessWidget {
   final onCardPressed;
 
   // filter channels by category
-  static List<Map<String, String>> filterChannels(
-      String cat, List<Map<String, String>> channels) {
-    List<Map<String, String>> items = channels
-        .where((Map<String, String> item) => item["cat"] == cat)
-        .toList();
+  static List<Channel> filterChannels(String cat, List<Channel> channels) {
+    List<Channel> items =
+        channels.where((Channel item) => item.category == cat).toList();
     return items.isNotEmpty ? items : channels;
   }
 
@@ -31,7 +29,7 @@ class ChannelsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> items = filterChannels(category, channels);
+    List<Channel> items = filterChannels(category, channels);
     return Container(
       margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: Column(

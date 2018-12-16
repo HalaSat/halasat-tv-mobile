@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/channel.dart';
+
 class ChannelCard extends StatelessWidget {
-  final Map<String, String> data;
+  final Channel data;
   final bool isLastChild;
   final onPressed;
 
@@ -29,13 +31,13 @@ class ChannelCard extends StatelessWidget {
                       height: 150.0,
                       width: 150.0,
                       fit: BoxFit.cover,
-                      image: 'http://91.106.32.84/images/' + data["image"],
+                      image: 'http://91.106.32.84/images/' + data.imageUrl,
                       placeholder: 'assets/placeholder.png',
                     )),
                 Container(
                     margin: EdgeInsets.only(top: 5.0),
                     child: Text(
-                      data["title"],
+                      data.title,
                       style: TextStyle(
                           fontSize: 12.0, fontWeight: FontWeight.w300),
                     )),
@@ -44,7 +46,7 @@ class ChannelCard extends StatelessWidget {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             List<String> recent = new List<String>.from(
                 await prefs.get('recent') ?? List<String>());
-            recent.add(data['id']);
+            recent.add(data.id.toString());
 
             await prefs.setStringList('recent', recent);
             print(

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../packages/chewie/lib/chewie.dart';
-import '../meta/channels.dart';
 import '../widgets/channels_row.dart';
+import '../models/channel.dart';
 
 class PlayerScreen extends StatefulWidget {
   final String imagesDirectory = 'http://91.106.32.84/images/';
-  final Map data;
-  PlayerScreen(this.data);
+  final Channel data;
+  final List<Channel> channels;
+  PlayerScreen(this.data, this.channels);
 
   @override
   State<StatefulWidget> createState() => PlayerScreenState();
@@ -23,11 +24,11 @@ class PlayerScreenState extends State<PlayerScreen> {
   @override
   void initState() {
     super.initState();
-    String app = widget.data['app'];
-    String streamName = widget.data['streamname'];
-    _title = widget.data['title'];
-    _category = widget.data['cat'];
-    _imageUrl = widget.imagesDirectory + widget.data["image"];
+    String app = widget.data.app;
+    String streamName = widget.data.streamName;
+    _title = widget.data.title;
+    _category = widget.data.category;
+    _imageUrl = widget.imagesDirectory + widget.data.imageUrl;
     _controller = VideoPlayerController.network(
       'http://192.168.37.2:1935/$app/${streamName}_adaptive.m3u8',
 //      'http://stream.shabakaty.com:6001/sport/ch22/ch22_360.m3u8',
@@ -89,21 +90,21 @@ class PlayerScreenState extends State<PlayerScreen> {
           excerpt: 'Recommended channels',
           icon: Icons.explore,
           onCardPressed: _onCardPressed,
-          channels: channels),
+          channels: widget.channels),
     ]));
   }
 
-  _onCardPressed(data, context) {
-    String title = data['title'];
-    String category = data['cat'];
-    String app = data['app'];
-    String streamName = data['streamname'];
+  _onCardPressed(Channel data, BuildContext context) {
+    String title = data.title;
+    String category = data.category;
+    String app = data.app;
+    String streamName = data.streamName;
     String url = 'http://192.168.37.2:1935/${app}/${streamName}_adaptive.m3u8';
     if (url != _controller.dataSource)
       setState(() {
         _title = title;
         _category = category;
-        _imageUrl = widget.imagesDirectory + data['image'];
+        _imageUrl = widget.imagesDirectory + data.imageUrl;
         _controller = VideoPlayerController.network(
           url,
         );

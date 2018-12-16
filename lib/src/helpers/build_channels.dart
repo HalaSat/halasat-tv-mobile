@@ -3,7 +3,6 @@ import '../meta/channels.dart';
 import '../models/channel.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 
 List<Channel> _buildChannelsList({@required List<dynamic> jsonData}) {
@@ -16,8 +15,8 @@ List<Channel> _buildChannelsList({@required List<dynamic> jsonData}) {
   return channelsList;
 }
 
- Future<List<Channel>> getRawChannelsData(String url) async {
- List<Channel> channels ;
+Future<List<Channel>> getRawChannelsData(String url) async {
+  List<Channel> channels;
   await http.get(url).then((res) {
     List<dynamic> temp = json.decode((res.body));
     channels = _buildChannelsList(jsonData: temp);
