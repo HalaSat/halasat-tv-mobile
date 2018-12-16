@@ -6,6 +6,7 @@ import './src/helpers/build_channels.dart';
 import './src/screens/tv.dart';
 import './src/screens/players_list.dart';
 
+
 void main() {
   runApp(App());
 }
@@ -14,7 +15,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Channel> channelsList;
-    getRawChannelsData(CHANNELS_URL).then((List<Channel> value) {
+    getRawChannelsData(CHANNELS_URL).then((List<Channel> value){
       print(value.length);
       channelsList = value;
     });
