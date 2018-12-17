@@ -1,4 +1,4 @@
-package com.example.halasattvandroid;
+package net.hs.tv;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
