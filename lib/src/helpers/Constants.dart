@@ -1,1 +1,1 @@
-final String CHANNELS_URL = 'http://tv.halasat.net/api.php';
+const String CHANNELS_URL = 'http://tv.halasat.net/api.php';

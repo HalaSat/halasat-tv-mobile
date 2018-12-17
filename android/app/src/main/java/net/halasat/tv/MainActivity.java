@@ -1,4 +1,4 @@
-package net.hs.tv;
+package net.halasat.tv;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import './chewie_progress_colors.dart';
-import './material_progress_bar.dart';
+//import './material_progress_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -339,24 +339,24 @@ class _MaterialControlsState extends State<MaterialControls> {
     });
   }
 
-  Widget _buildProgressBar() {
-    return new Expanded(
-      child: new Padding(
-        padding: new EdgeInsets.only(right: 20.0),
-        child: new MaterialVideoProgressBar(widget.controller, onDragStart: () {
-          setState(() {
-            _dragging = true;
-          });
-
-          _hideTimer?.cancel();
-        }, onDragEnd: () {
-          setState(() {
-            _dragging = false;
-          });
-
-          _startHideTimer();
-        }, colors: null),
-      ),
-    );
-  }
+//  Widget _buildProgressBar() {
+//    return new Expanded(
+//      child: new Padding(
+//        padding: new EdgeInsets.only(right: 20.0),
+//        child: new MaterialVideoProgressBar(widget.controller, onDragStart: () {
+//          setState(() {
+//            _dragging = true;
+//          });
+//
+//          _hideTimer?.cancel();
+//        }, onDragEnd: () {
+//          setState(() {
+//            _dragging = false;
+//          });
+//
+//          _startHideTimer();
+//        }, colors: null),
+//      ),
+//    );
+//  }
 }

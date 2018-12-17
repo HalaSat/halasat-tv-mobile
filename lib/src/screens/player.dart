@@ -99,7 +99,7 @@ class PlayerScreenState extends State<PlayerScreen> {
     String category = data.category;
     String app = data.app;
     String streamName = data.streamName;
-    String url = 'http://192.168.37.2:1935/${app}/${streamName}_adaptive.m3u8';
+    String url = 'http://192.168.37.2:1935/$app/${streamName}_adaptive.m3u8';
     if (url != _controller.dataSource)
       setState(() {
         _title = title;
