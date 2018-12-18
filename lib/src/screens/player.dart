@@ -21,6 +21,7 @@ class PlayerScreenState extends State<PlayerScreen> {
   String _title;
   String _category;
   String _imageUrl;
+  int _qualityIndex = 0;
 
   @override
   void initState() {
@@ -55,57 +56,57 @@ class PlayerScreenState extends State<PlayerScreen> {
       ),
       Container(
           margin: EdgeInsets.only(top: 6.0, left: 6.0),
-          child: Row(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 25.0,
-                backgroundImage: NetworkImage(_imageUrl),
-              ),
-              Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(_title,
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Opacity(
-                            opacity: .5,
-                            child: Row(children: <Widget>[
-                              Icon(
-                                Icons.category,
-                                size: 13,
+          child: Row(children: <Widget>[
+            CircleAvatar(
+              radius: 25.0,
+              backgroundImage: NetworkImage(_imageUrl),
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(_title,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Opacity(
+                          opacity: .5,
+                          child: Row(children: <Widget>[
+                            Icon(
+                              Icons.category,
+                              size: 13,
+                            ),
+                            Text(
+                              _category.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 13,
                               ),
-                              Text(
-                                _category.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                ),
-                              )
-                            ])),
-                      ])),
-              Expanded(
-                child: Text(''),
-              ),
-              DropdownButton(
-                value: 0,
-                items: [
-                  DropdownMenuItem<int>(
-                    value: 0,
-                    child: Text('AUTO'),
-                  ),
-                  DropdownMenuItem<int>(
-                    value: 1,
-                    child: Text('SD'),
-                  ),
-                  DropdownMenuItem<int>(
-                    value: 2,
-                    child: Text('HD'),
-                  ),
-                ],
-                onChanged: (i) => _setQuality(_currentChannel, i),
-              )
-            ],
-          )),
+                            )
+                          ])),
+                    ])),
+            Expanded(
+              child: Text(''),
+            ),
+            Padding(
+                padding: EdgeInsets.only(right: 15),
+                child: DropdownButton(
+                  value: _qualityIndex,
+                  items: [
+                    DropdownMenuItem<int>(
+                      value: 0,
+                      child: Text('AUTO'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 1,
+                      child: Text('SD'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 2,
+                      child: Text('HD'),
+                    ),
+                  ],
+                  onChanged: (i) => _setQuality(_currentChannel, i),
+                ))
+          ])),
       Divider(),
       // todo: fix leak
       ChannelsRow(
@@ -117,7 +118,7 @@ class PlayerScreenState extends State<PlayerScreen> {
     ]));
   }
 
-  _onCardPressed(Channel data, BuildContext context) {
+  void _onCardPressed(Channel data, BuildContext context) {
     String title = data.title;
     String category = data.category;
     String app = data.app;
@@ -135,17 +136,18 @@ class PlayerScreenState extends State<PlayerScreen> {
       });
   }
 
-  _setQuality(Channel channel, int value) {
+  void _setQuality(Channel channel, int value) {
     String url = _getUrls(channel)[value];
     if (url != _controller.dataSource)
       setState(() {
         _controller = VideoPlayerController.network(
           url,
         );
+        _qualityIndex = value;
       });
   }
 
-  _getUrls(Channel item) => [
+  List<String> _getUrls(Channel item) => [
         'http://192.168.37.2:1935/${item.app}/${item.streamName}_adaptive.m3u8',
         'http://192.168.37.2:1935/${item.app}/${item.streamName}_sd.m3u8',
         'http://192.168.37.2:1935/${item.app}/${item.streamName}/playlist.m3u8',

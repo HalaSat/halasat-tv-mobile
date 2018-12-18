@@ -51,6 +51,8 @@ class Chewie extends StatefulWidget {
   /// Defines if the player will start in fullscreen when play is pressed
   final bool fullScreenByDefault;
 
+  final Function(int) onQualityChanged;
+
   Chewie(
     this.controller, {
     Key key,
@@ -64,6 +66,7 @@ class Chewie extends StatefulWidget {
     this.materialProgressColors,
     this.placeholder,
     this.showControls = true,
+    this.onQualityChanged,
   })  : assert(controller != null,
             'You must provide a controller to play a video'),
         super(key: key);
@@ -89,6 +92,7 @@ class _ChewiePlayerState extends State<Chewie> {
       placeholder: widget.placeholder,
       autoPlay: widget.autoPlay,
       showControls: widget.showControls,
+      onQualityChanged: widget.onQualityChanged,
     );
   }
 
