@@ -17,6 +17,7 @@ class PlayerScreen extends StatefulWidget {
 
 class PlayerScreenState extends State<PlayerScreen> {
   VideoPlayerController _controller;
+  Channel _currentChannel;
   String _title;
   String _category;
   String _imageUrl;
@@ -26,6 +27,7 @@ class PlayerScreenState extends State<PlayerScreen> {
     super.initState();
     String app = widget.data.app;
     String streamName = widget.data.streamName;
+    _currentChannel = widget.data;
     _title = widget.data.title;
     _category = widget.data.category;
     _imageUrl = widget.imagesDirectory + widget.data.imageUrl;
@@ -80,7 +82,28 @@ class PlayerScreenState extends State<PlayerScreen> {
                                 ),
                               )
                             ])),
-                      ]))
+                      ])),
+              Expanded(
+                child: Text(''),
+              ),
+              DropdownButton(
+                value: 0,
+                items: [
+                  DropdownMenuItem<int>(
+                    value: 0,
+                    child: Text('AUTO'),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 1,
+                    child: Text('SD'),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 2,
+                    child: Text('HD'),
+                  ),
+                ],
+                onChanged: (i) => _setQuality(_currentChannel, i),
+              )
             ],
           )),
       Divider(),
@@ -102,6 +125,7 @@ class PlayerScreenState extends State<PlayerScreen> {
     String url = 'http://192.168.37.2:1935/$app/${streamName}_adaptive.m3u8';
     if (url != _controller.dataSource)
       setState(() {
+        _currentChannel = data;
         _title = title;
         _category = category;
         _imageUrl = widget.imagesDirectory + data.imageUrl;
@@ -110,4 +134,20 @@ class PlayerScreenState extends State<PlayerScreen> {
         );
       });
   }
+
+  _setQuality(Channel channel, int value) {
+    String url = _getUrls(channel)[value];
+    if (url != _controller.dataSource)
+      setState(() {
+        _controller = VideoPlayerController.network(
+          url,
+        );
+      });
+  }
+
+  _getUrls(Channel item) => [
+        'http://192.168.37.2:1935/${item.app}/${item.streamName}_adaptive.m3u8',
+        'http://192.168.37.2:1935/${item.app}/${item.streamName}_sd.m3u8',
+        'http://192.168.37.2:1935/${item.app}/${item.streamName}/playlist.m3u8',
+      ];
 }
