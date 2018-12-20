@@ -1,4 +1,4 @@
-List<Map<String, String>> channels = [
+List<dynamic> channels = [
   {
     "id": "19",
     "title": "BEIN SPORTS 4K",
