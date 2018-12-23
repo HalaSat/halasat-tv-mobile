@@ -7,11 +7,11 @@ class PlayerInfoCard extends StatelessWidget {
   PlayerInfoCard(this.player);
   @override
   Widget build(BuildContext context) {
-    return Card(
-        margin: EdgeInsets.all(5.0),
-        // margin: EdgeInsets.all(10.0),
+    return Padding(
+        padding: EdgeInsets.all(5.0),
         child: InkWell(
           // highlightColor: Colors.blue,
+          borderRadius: BorderRadius.circular(10.0),
           onTap: () {
             Navigator.push(
                 context,

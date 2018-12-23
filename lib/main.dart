@@ -12,7 +12,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'HalaSat TV',
-      // theme: ThemeData.dark(),
+      theme: ThemeData(fontFamily: 'Ubuntu'),
       home: DefaultTabController(
         length: 2,
         child: Scaffold(

@@ -33,7 +33,7 @@ class ChannelsRowListState extends State<ChannelsRowList> {
               _recentChannels.isNotEmpty
                   ? ChannelsRow(
                       category: 'Recent',
-                      excerpt: 'Your watch history',
+                      excerpt: 'Watch history',
                       icon: Icons.history,
                       onCardPressed: _onCardPressed,
                       iconColor: Colors.purple,
@@ -48,14 +48,14 @@ class ChannelsRowListState extends State<ChannelsRowList> {
                   channels: _channels),
               ChannelsRow(
                   category: 'Entertainment',
-                  excerpt: 'News, Science, TV shows and many others',
+                  excerpt: 'Entertainment and News',
                   icon: Icons.featured_video,
                   onCardPressed: _onCardPressed,
                   iconColor: Colors.orange,
                   channels: _channels),
               ChannelsRow(
                   category: 'Movies',
-                  excerpt: 'Top channels for movie lovers',
+                  excerpt: 'Movies and TV Shows',
                   icon: Icons.movie,
                   onCardPressed: _onCardPressed,
                   iconColor: Colors.red,
@@ -69,7 +69,7 @@ class ChannelsRowListState extends State<ChannelsRowList> {
                   channels: _channels),
               ChannelsRow(
                   category: 'Music',
-                  excerpt: 'Enjoy the beats with top music channels',
+                  excerpt: 'Top music channels',
                   icon: Icons.music_note,
                   onCardPressed: _onCardPressed,
                   iconColor: Colors.cyan,

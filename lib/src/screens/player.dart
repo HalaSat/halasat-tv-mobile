@@ -55,7 +55,7 @@ class PlayerScreenState extends State<PlayerScreen> {
         looping: true,
       ),
       Container(
-          margin: EdgeInsets.only(top: 6.0, left: 6.0),
+          margin: EdgeInsets.only(top: 6.0, left: 6.0, bottom: 20.0),
           child: Row(children: <Widget>[
             CircleAvatar(
               radius: 25.0,
@@ -84,11 +84,12 @@ class PlayerScreenState extends State<PlayerScreen> {
                           ])),
                     ])),
             Expanded(
-              child: Text(''),
+              child: SizedBox(),
             ),
             Padding(
                 padding: EdgeInsets.only(right: 15),
-                child: DropdownButton(
+                child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
                   value: _qualityIndex,
                   items: [
                     DropdownMenuItem<int>(
@@ -105,10 +106,9 @@ class PlayerScreenState extends State<PlayerScreen> {
                     ),
                   ],
                   onChanged: (i) => _setQuality(_currentChannel, i),
-                ))
+                )))
           ])),
-      Divider(),
-      // todo: fix leak
+      // Divider(),
       ChannelsRow(
           category: _category,
           excerpt: 'Recommended channels',

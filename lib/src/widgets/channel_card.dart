@@ -17,49 +17,46 @@ class ChannelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.only(left: 15.0, right: isLastChild ? 15.0 : 0.0),
-        child: FlatButton(
-          padding: EdgeInsets.all(0.0),
+        child: InkWell(
+          // radius: 10.0,
+          borderRadius: BorderRadius.circular(10.0),
           child: Container(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                DecoratedBox(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: .2)),
-                    child: FadeInImage.assetNetwork(
-                      height: 150.0,
-                      width: 150.0,
-                      fit: BoxFit.cover,
-                      image: 'http://91.106.32.84/images/' + data.imageUrl,
-                      placeholder: 'assets/placeholder.png',
-                    )),
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: DecoratedBox(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: .2)),
+                        child: FadeInImage.assetNetwork(
+                          height: 150.0,
+                          width: 150.0,
+                          fit: BoxFit.cover,
+                          image: 'http://91.106.32.84/images/' + data.imageUrl,
+                          placeholder: 'assets/placeholder.png',
+                        ))),
                 Container(
                     margin: EdgeInsets.only(top: 5.0),
                     child: Text(
                       data.title,
                       style: TextStyle(
-                          fontSize: 12.0, fontWeight: FontWeight.w300),
+                          fontSize: 12.0, fontWeight: FontWeight.w700),
                     )),
               ])),
-          onPressed: () async {
+          onTap: () async {
+            // create a new instance of shared preferences
             SharedPreferences prefs = await SharedPreferences.getInstance();
+            // build a list of strings from the dynamic list of recent channel
             List<String> recent = new List<String>.from(
+                // get recent channel if they exist, otherwise return an empty list
                 await prefs.get('recent') ?? List<String>());
+            // add the the pressed channel to the recent list
             recent.add(data.id.toString());
-
+            // set shared preferences with recent channels
             await prefs.setStringList('recent', recent);
-            print(
-              '''
-            ########
-            ********
-            --------
-                  recent: $recent
-            --------     
-            ********
-            ########   
-            ''',
-            );
+            // call the onPressed callback from channel row
             onPressed(data, context);
           },
         ));

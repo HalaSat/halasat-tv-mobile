@@ -36,33 +36,33 @@ class ChannelsRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-              margin: EdgeInsets.only(left: 15.0),
+              margin: EdgeInsets.only(left: 15.0, bottom: 5.0),
               child: Row(children: [
                 Container(
                   margin: EdgeInsets.only(right: 5.0),
                   child: Icon(
                     icon,
                     color: iconColor,
-                    size: 15.0,
+                    size: 18.0,
                   ),
                 ),
                 Text(
-                  category.toUpperCase(),
+                  excerpt,
                   style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w400,
                     // color: iconColor
                   ),
                 )
               ])),
-          Container(
-            margin: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
-            child: Text(
-              excerpt,
-              style: TextStyle(
-                  fontWeight: FontWeight.w300, color: Colors.grey[600]),
-            ),
-          ),
+          // Container(
+          //   margin: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
+          //   child: Text(
+          //     excerpt,
+          //     style: TextStyle(
+          //         fontWeight: FontWeight.w300, color: Colors.grey[600]),
+          //   ),
+          // ),
           // Divider(color: Colors.blue),
           Container(
             height: 173.0,
@@ -81,7 +81,7 @@ class ChannelsRow extends StatelessWidget {
               },
             ),
           ),
-          Divider(),
+          // Divider(),
         ],
       ),
     );
