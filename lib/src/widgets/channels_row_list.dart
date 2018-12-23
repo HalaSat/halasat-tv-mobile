@@ -36,13 +36,26 @@ class ChannelsRowListState extends State<ChannelsRowList>
   ScrollController cont;
   int inFocusRowCardsNumber;
   double rowHeight = 260;
-  GlobalKey key = GlobalKey();
+  GlobalKey key; 
   List<ScrollController> scrollControllers = [];
 
   @override
   void afterFirstLayout(BuildContext context) {
-    print("after initializing");
-    print('recent channels activated:'+_recentChannels.length.toString());
+    // print("after initializing");
+    // print('recent channels activated:'+_recentChannels.length.toString());
+     _setChannels().then((result){
+      //  print('future result is :'+ result.toString());
+      //  print('future result:' + _nodesList.length.toString());
+       if(result){
+       _nodesList.insert(0, recentNode);
+       }
+        // print('future result:' + _nodesList.length.toString());
+    if (isFirst) {
+      FocusScope.of(context).requestFocus(_nodesList.first);
+      inFocusIndex = _nodesList.indexOf(_nodesList.first);
+      isFirst = false;
+    }
+    });
     // inFocus = _recentChannels.length == 0 ? sportNode : recentNode;
     // if (isFirst) {
     //   FocusScope.of(context).requestFocus(inFocus);
@@ -53,19 +66,10 @@ class ChannelsRowListState extends State<ChannelsRowList>
 
   @override
   void initState() {
-    print('initializing');
-    _setChannels().then((result){
-       inFocus = _recentChannels.length == 0 ? sportNode : recentNode;
-    if (isFirst) {
-      FocusScope.of(context).requestFocus(inFocus);
-      inFocusIndex = _nodesList.indexOf(inFocus);
-      isFirst = false;
-    }
-
-    });
-    
-
+    // print('initializing');
+   
     cont = ScrollController();
+    key = GlobalKey();
 
     _nodesList = List<FocusNode>();
     recentNode = FocusNode();
@@ -75,7 +79,7 @@ class ChannelsRowListState extends State<ChannelsRowList>
     kidsNode = FocusNode();
     musicNode = FocusNode();
 
-    _nodesList.add(recentNode);
+    //_nodesList.add(recentNode);
     _nodesList.add(sportNode);
     _nodesList.add(entertainmentNode);
     _nodesList.add(moviesNode);
@@ -90,14 +94,14 @@ class ChannelsRowListState extends State<ChannelsRowList>
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // debug block
-    print(_nodesList.length);
+    // print(_nodesList.length);
 ///////////////////////////////////////////////////////////////////////////////////////
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("building");
+    // print("building");
 
     return _channels != null
         ? ListView(
@@ -107,7 +111,6 @@ class ChannelsRowListState extends State<ChannelsRowList>
             children: <Widget>[
               _recentChannels.isNotEmpty
                   ? RawKeyboardListener(
-                      key: key,
                       child: ChannelsRow(
                         setCardsNumber: setCardsNumber,
                         category: 'Recent',
@@ -127,6 +130,7 @@ class ChannelsRowListState extends State<ChannelsRowList>
                     )
                   : Text(''),
               RawKeyboardListener(
+                key: key,
                 child: ChannelsRow(
                   setCardsNumber: setCardsNumber,
                   category: 'Sports',
@@ -135,13 +139,13 @@ class ChannelsRowListState extends State<ChannelsRowList>
                   onCardPressed: _onCardPressed,
                   iconColor: Colors.green,
                   channels: _channels,
-                  rowHasFocus: inFocusIndex == 1 ? true : false,
-                  scrollController: scrollControllers[1],
+                  rowHasFocus: inFocusIndex == _nodesList.indexOf(_nodesList.last) -4 ? true : false,
+                  scrollController: _recentChannels.isEmpty ? scrollControllers[0] : scrollControllers[1],
                   inFocusCardIndex: inFocusCardIndex,
                   cardPhysicalKeyListener: onKeyboardEvent,
                   setFocusedChannel: setInFocusChannel,
                 ),
-                focusNode: _nodesList[1],
+                focusNode: _recentChannels.isEmpty? _nodesList[0] : _nodesList[1],
                 onKey: onKeyboardEvent,
               ),
               RawKeyboardListener(
@@ -153,13 +157,13 @@ class ChannelsRowListState extends State<ChannelsRowList>
                   onCardPressed: _onCardPressed,
                   iconColor: Colors.orange,
                   channels: _channels,
-                  rowHasFocus: inFocusIndex == 2 ? true : false,
+                  rowHasFocus: inFocusIndex == _nodesList.indexOf(_nodesList.last) -3 ? true : false,
                   inFocusCardIndex: inFocusCardIndex,
-                  scrollController: scrollControllers[2],
+                  scrollController: _recentChannels.isEmpty ? scrollControllers[1] : scrollControllers[2],
                   cardPhysicalKeyListener: onKeyboardEvent,
                   setFocusedChannel: setInFocusChannel,
                 ),
-                focusNode: _nodesList[2],
+                focusNode: _recentChannels.isEmpty? _nodesList[1] : _nodesList[2],
                 onKey: onKeyboardEvent,
               ),
               RawKeyboardListener(
@@ -171,13 +175,13 @@ class ChannelsRowListState extends State<ChannelsRowList>
                   onCardPressed: _onCardPressed,
                   iconColor: Colors.red,
                   channels: _channels,
-                  rowHasFocus: inFocusIndex == 3 ? true : false,
+                  rowHasFocus: inFocusIndex == _nodesList.indexOf(_nodesList.last) -2 ? true : false,
                   inFocusCardIndex: inFocusCardIndex,
-                  scrollController: scrollControllers[3],
+                  scrollController: _recentChannels.isEmpty ? scrollControllers[2] : scrollControllers[3],
                   cardPhysicalKeyListener: onKeyboardEvent,
                   setFocusedChannel: setInFocusChannel,
                 ),
-                focusNode: _nodesList[3],
+                focusNode: _recentChannels.isEmpty? _nodesList[2] : _nodesList[3],
                 onKey: onKeyboardEvent,
               ),
               RawKeyboardListener(
@@ -189,13 +193,13 @@ class ChannelsRowListState extends State<ChannelsRowList>
                   onCardPressed: _onCardPressed,
                   iconColor: Colors.pink,
                   channels: _channels,
-                  rowHasFocus: inFocusIndex == 4 ? true : false,
-                  scrollController: scrollControllers[4],
+                  rowHasFocus: inFocusIndex == _nodesList.indexOf(_nodesList.last) -1 ? true : false,
+                  scrollController: _recentChannels.isEmpty ? scrollControllers[3] : scrollControllers[4],
                   inFocusCardIndex: inFocusCardIndex,
                   cardPhysicalKeyListener: onKeyboardEvent,
                   setFocusedChannel: setInFocusChannel,
                 ),
-                focusNode: _nodesList[4],
+                focusNode: _recentChannels.isEmpty? _nodesList[3] : _nodesList[4],
                 onKey: onKeyboardEvent,
               ),
               RawKeyboardListener(
@@ -207,13 +211,13 @@ class ChannelsRowListState extends State<ChannelsRowList>
                   onCardPressed: _onCardPressed,
                   iconColor: Colors.cyan,
                   channels: _channels,
-                  rowHasFocus: inFocusIndex == 5 ? true : false,
+                  rowHasFocus: inFocusIndex == _nodesList.indexOf(_nodesList.last) ? true : false,
                   inFocusCardIndex: inFocusCardIndex,
-                  scrollController: scrollControllers[5],
+                  scrollController: _recentChannels.isEmpty ? scrollControllers[4] : scrollControllers[5],
                   cardPhysicalKeyListener: onKeyboardEvent,
                   setFocusedChannel: setInFocusChannel,
                 ),
-                focusNode: _nodesList[5],
+                focusNode: _nodesList[_nodesList.indexOf(_nodesList.last)],
                 onKey: onKeyboardEvent,
               ),
             ],
@@ -248,7 +252,8 @@ class ChannelsRowListState extends State<ChannelsRowList>
     setState(() {
       _recentChannels = new List<Channel>.from(recentChannels);
     });
-    return true;
+
+    return _recentChannels.isNotEmpty ? true: false;
 
   }
 
@@ -262,12 +267,12 @@ class ChannelsRowListState extends State<ChannelsRowList>
     rowHeight = box.size.height;
     FocusNode requestingNode = FocusNode();
     if (event is RawKeyDownEvent && event.data is RawKeyEventDataAndroid) {
-      print('keydown');
+      // print('keydown');
       RawKeyDownEvent ev = event;
       RawKeyEventDataAndroid evAndroid = ev.data;
       if (evAndroid.keyCode == 20) {
         if (_nodesList.last == inFocus) {
-          requestingNode = _nodesList.first;
+          requestingNode = _nodesList.first;  //_recentChannels.isNotEmpty ? _nodesList.first : _nodesList[_nodesList.indexOf(_nodesList.first) + 1];
           cont.animateTo(rowHeight * _nodesList.indexOf(_nodesList.first),
               duration: Duration(milliseconds: 200), curve: Curves.bounceIn);
           inFocus = requestingNode;
@@ -305,13 +310,13 @@ class ChannelsRowListState extends State<ChannelsRowList>
               duration: Duration(milliseconds: 200), curve: Curves.easeIn);
         });
       } else if (evAndroid.keyCode == 22) {
-        print('Right');
-        print('inFocus cards count:' + inFocusRowCardsNumber.toString());
-        print('inFocus card index:' + inFocusCardIndex.toString());
+        // print('Right');
+        // print('inFocus cards count:' + inFocusRowCardsNumber.toString());
+        // print('inFocus card index:' + inFocusCardIndex.toString());
         if (inFocusCardIndex == inFocusRowCardsNumber) {
-          print('last right');
+          // print('last right');
         } else if (inFocusCardIndex < inFocusRowCardsNumber) {
-          print('right pressed');
+          // print('right pressed');
           inFocusCardIndex = inFocusCardIndex + 1;
           scrollControllers[inFocusIndex].animateTo(150.0 * inFocusCardIndex,
               duration: Duration(milliseconds: 200), curve: Curves.easeIn);
