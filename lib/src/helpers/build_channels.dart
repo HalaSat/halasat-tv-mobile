@@ -21,6 +21,6 @@ Future<List<Channel>> getRawChannelsData(String url) async {
     List<dynamic> temp = json.decode((res.body));
     channels = _buildChannelsList(jsonData: temp);
   });
-  channels.length;
+  channels = _buildChannelsList(jsonData: channels);
   return channels;
 }

@@ -7,15 +7,18 @@ class ChannelCard extends StatelessWidget {
   final Channel data;
   final bool isLastChild;
   final onPressed;
+  final bool hasFocus;
 
   ChannelCard(
       {@required this.data,
       @required this.onPressed,
+      this.hasFocus,
       this.isLastChild = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(color: hasFocus ? Colors.grey[300] : Colors.transparent),
         margin: EdgeInsets.only(left: 15.0, right: isLastChild ? 15.0 : 0.0),
         child: InkWell(
           // radius: 10.0,
@@ -37,6 +40,7 @@ class ChannelCard extends StatelessWidget {
                           image: 'http://91.106.32.84/images/' + data.imageUrl,
                           placeholder: 'assets/placeholder.png',
                         ))),
+
                 Container(
                     margin: EdgeInsets.only(top: 5.0),
                     child: Text(

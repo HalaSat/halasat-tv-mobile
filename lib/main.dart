@@ -11,6 +11,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'HalaSat TV',
       theme: ThemeData(fontFamily: 'Ubuntu'),
       home: DefaultTabController(
