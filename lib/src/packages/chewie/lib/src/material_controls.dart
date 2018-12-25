@@ -12,15 +12,14 @@ class MaterialControls extends StatefulWidget {
   final Future<dynamic> Function() onExpandCollapse;
   final ChewieProgressColors progressColors;
   final bool autoPlay;
-  final Function(int) onQualityChanged;
 
-  MaterialControls(
-      {@required this.controller,
-      @required this.fullScreen,
-      @required this.onExpandCollapse,
-      @required this.progressColors,
-      @required this.autoPlay,
-      @required this.onQualityChanged});
+  MaterialControls({
+    @required this.controller,
+    @required this.fullScreen,
+    @required this.onExpandCollapse,
+    @required this.progressColors,
+    @required this.autoPlay,
+  });
 
   @override
   State<StatefulWidget> createState() {

@@ -18,7 +18,6 @@ class PlayerWithControls extends StatefulWidget {
   final double aspectRatio;
   final bool autoPlay;
   final bool showControls;
-  final Function(int) onQualityChanged;
 
   PlayerWithControls({
     Key key,
@@ -31,20 +30,15 @@ class PlayerWithControls extends StatefulWidget {
     this.materialProgressColors,
     this.placeholder,
     this.autoPlay,
-    this.onQualityChanged,
   }) : super(key: key);
 
   @override
   State createState() {
-    return new _VideoPlayerWithControlsState(onQualityChanged);
+    return new _VideoPlayerWithControlsState();
   }
 }
 
 class _VideoPlayerWithControlsState extends State<PlayerWithControls> {
-  Function(int) onQualityChanged;
-
-  _VideoPlayerWithControlsState(this.onQualityChanged);
-
   @override
   Widget build(
     BuildContext context,
@@ -56,15 +50,16 @@ class _VideoPlayerWithControlsState extends State<PlayerWithControls> {
         width: MediaQuery.of(context).size.width,
         child: new AspectRatio(
           aspectRatio: widget.aspectRatio,
-          child:
-              _buildPlayerWithControls(controller, context, onQualityChanged),
+          child: _buildPlayerWithControls(controller, context),
         ),
       ),
     );
   }
 
-  Container _buildPlayerWithControls(VideoPlayerController controller,
-      BuildContext context, dynamic onQualityChanged) {
+  Container _buildPlayerWithControls(
+    VideoPlayerController controller,
+    BuildContext context,
+  ) {
     return new Container(
       child: new Stack(
         children: <Widget>[
@@ -78,7 +73,10 @@ class _VideoPlayerWithControlsState extends State<PlayerWithControls> {
               ),
             ),
           ),
-          _buildControls(context, controller, onQualityChanged),
+          _buildControls(
+            context,
+            controller,
+          ),
         ],
       ),
     );
@@ -87,7 +85,6 @@ class _VideoPlayerWithControlsState extends State<PlayerWithControls> {
   Widget _buildControls(
     BuildContext context,
     VideoPlayerController controller,
-    dynamic onQualityChanged,
   ) {
     return widget.showControls
         ? Theme.of(context).platform == TargetPlatform.android
@@ -98,7 +95,6 @@ class _VideoPlayerWithControlsState extends State<PlayerWithControls> {
                 // progressColors: widget.materialProgressColors,
                 progressColors: null,
                 autoPlay: widget.autoPlay,
-                onQualityChanged: onQualityChanged,
               )
             : new CupertinoControls(
                 backgroundColor: new Color.fromRGBO(41, 41, 41, 0.7),
