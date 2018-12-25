@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../packages/chewie/lib/chewie.dart';
-import '../widgets/channels_row.dart';
+import '../widgets/channels_row_player.dart';
 import '../models/channel.dart';
 
 class PlayerScreen extends StatefulWidget {
@@ -109,7 +109,7 @@ class PlayerScreenState extends State<PlayerScreen> {
                 )))
           ])),
       // Divider(),
-      ChannelsRow(
+      PlayerChannelsRow(
           category: _category,
           excerpt: 'Recommended channels',
           icon: Icons.explore,
