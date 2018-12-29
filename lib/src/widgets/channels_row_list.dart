@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/services.dart';
+import 'package:screen/screen.dart';
 
 import '../widgets/channels_row.dart';
 import '../screens/player.dart';
@@ -91,6 +92,12 @@ class ChannelsRowListState extends State<ChannelsRowList>
       ScrollController temp = ScrollController();
       scrollControllers.add(temp);
     }
+    Screen.isKeptOn.then((keptOn) {
+      if (keptOn){
+        print("Screen On:" + keptOn.toString());
+        Screen.keepOn(false);
+      }
+    });
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // debug block

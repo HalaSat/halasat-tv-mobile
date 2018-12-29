@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:screen/screen.dart';
 
 import '../packages/chewie/lib/chewie.dart';
 import '../widgets/channels_row_player.dart';
@@ -36,6 +37,12 @@ class PlayerScreenState extends State<PlayerScreen> {
       'http://192.168.37.2:1935/$app/${streamName}_adaptive.m3u8',
 //      'http://stream.shabakaty.com:6001/sport/ch22/ch22_360.m3u8',
     );
+    Screen.isKeptOn.then((keptOn) {
+      if (!keptOn){
+        print("Screen On:" + keptOn.toString());
+        Screen.keepOn(true);
+      }
+    });
   }
 
   @override
