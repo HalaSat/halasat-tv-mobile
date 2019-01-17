@@ -7,10 +7,10 @@ description: halasat casting services.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 2.3.0+7
+version: 2.4.0+9
 
 environment:
-  sdk: '>=2.0.0-dev.68.0 <3.0.0'
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -18,7 +18,7 @@ dependencies:
   after_layout: ^1.0.7
   screen: ^0.0.4
 
-  http: '0.12.0'
+  http: "0.12.0"
   video_player: ^0.7.2
   chewie: ^0.8.0
   shared_preferences: ^0.4.3

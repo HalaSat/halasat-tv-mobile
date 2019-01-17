@@ -42,9 +42,10 @@ class AppState extends State<App> {
                 },
               )
             ],
+            leading: Icon(Icons.tv),
             bottom: TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.tv)),
+                Tab(icon: Icon(Icons.live_tv)),
                 Tab(icon: Icon(Icons.book)),
               ],
             ),
