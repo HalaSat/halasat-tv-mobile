@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-import '../meta/channels.dart';
 import '../widgets/channels_row_list.dart';
 
 class TVScreen extends StatelessWidget {

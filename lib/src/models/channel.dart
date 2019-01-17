@@ -13,7 +13,7 @@ class Channel {
   int order;
   int enable;
 
-  Channel({@required Map<String, String> channelData}) {
+  Channel({@required Map channelData}) {
     app = channelData['app'];
     id = int.parse(channelData['id']);
     title = channelData['title'];

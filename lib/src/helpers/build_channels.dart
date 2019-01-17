@@ -6,21 +6,14 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 
 List<Channel> _buildChannelsList({@required List<dynamic> jsonData}) {
-  final List<dynamic> channelsRawList = channels;
-  final List<Channel> channelsList = List<Channel>();
-  channelsRawList.forEach((map) {
-    Channel channel = Channel(channelData: map);
-    channelsList.add(channel);
-  });
-  return channelsList;
+  return jsonData.map((item) => Channel(channelData: item)).toList();
 }
 
 Future<List<Channel>> getRawChannelsData(String url) async {
   List<Channel> channels;
   await http.get(url).then((res) {
-    List<dynamic> temp = json.decode((res.body));
+    List temp = json.decode((res.body));
     channels = _buildChannelsList(jsonData: temp);
   });
-  channels = _buildChannelsList(jsonData: channels);
   return channels;
 }
