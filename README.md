@@ -1,3 +1,16 @@
-# HalaSat TV APP Source
+# HalaSat TV Android
+An android client for HalaSat TV service.
 
-TV Channels application.
+## Get Packages
+```bash
+flutter packages get
+```
+
+## Run
+```bash
+flutter run
+```
+
+
+
+
