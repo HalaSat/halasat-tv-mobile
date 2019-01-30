@@ -15,6 +15,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cloud_firestore:
   after_layout: ^1.0.7
   screen: ^0.0.4
 

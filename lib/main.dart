@@ -17,7 +17,7 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> {
   SharedPreferences _prefs;
-  bool _useDarkTheme = false;
+  bool _useDarkTheme = true;
 
   AppState() {
     _getTheme();
@@ -46,7 +46,7 @@ class AppState extends State<App> {
             bottom: TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.live_tv)),
-                Tab(icon: Icon(Icons.book)),
+                Tab(icon: Icon(Icons.message)),
               ],
             ),
             title: Text('HalaSat TV'),

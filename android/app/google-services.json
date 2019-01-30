@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1073409879519",
+    "firebase_url": "https://halasat-chat.firebaseio.com",
+    "project_id": "halasat-chat",
+    "storage_bucket": "halasat-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073409879519:android:86d10756033a9ef2",
+        "android_client_info": {
+          "package_name": "net.halasat.tv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1073409879519-fc2f4fefvqk1d6t52dcrv3kbmf58cah6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmTWK-ciad-aIRvyjzaONpiHhp6e_rEik"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

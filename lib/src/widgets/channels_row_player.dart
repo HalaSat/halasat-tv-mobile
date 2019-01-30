@@ -55,15 +55,6 @@ class PlayerChannelsRow extends StatelessWidget {
                   ),
                 )
               ])),
-          // Container(
-          //   margin: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 15.0),
-          //   child: Text(
-          //     excerpt,
-          //     style: TextStyle(
-          //         fontWeight: FontWeight.w300, color: Colors.grey[600]),
-          //   ),
-          // ),
-          // Divider(color: Colors.blue),
           Container(
             height: 173.0,
             margin: EdgeInsets.only(top: 5.0, bottom: 5.0),

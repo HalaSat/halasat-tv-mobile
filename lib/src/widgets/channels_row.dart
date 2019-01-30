@@ -14,11 +14,11 @@ class ChannelsRow extends StatefulWidget {
   final onCardPressed;
   final bool rowHasFocus;
   final int inFocusCardIndex;
-  Function setFocusedChannel;
+  final Function setFocusedChannel;
   final Function cardPhysicalKeyListener;
   final ScrollController scrollController;
-  int numberOfCards;
-  Function setCardsNumber;
+  final int numberOfCards;
+  final Function setCardsNumber;
 
   ChannelsRow({
     @required this.category,
@@ -51,10 +51,15 @@ class ChannelsRowState extends State<ChannelsRow>
   final ScrollController rowController = ScrollController();
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   void initState() {
     filterChannels(widget.category, widget.channels, items);
     _generateNodesList();
-    
+
     super.initState();
   }
 
@@ -87,7 +92,6 @@ class ChannelsRowState extends State<ChannelsRow>
                 Container(
                   margin: EdgeInsets.only(right: 5.0),
                   child: Icon(
-
                     widget.icon,
                     color: widget.iconColor,
                     size: 18.0,
@@ -107,7 +111,7 @@ class ChannelsRowState extends State<ChannelsRow>
             height: 173.0,
             margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
             child: ListView.builder(
-              cacheExtent: 150.0* items.length,
+              cacheExtent: 150.0 * items.length,
               scrollDirection: Axis.horizontal,
               controller: widget.scrollController,
               itemCount: items.length,

@@ -41,6 +41,11 @@ class ChannelsRowListState extends State<ChannelsRowList>
   List<ScrollController> scrollControllers = [];
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   void afterFirstLayout(BuildContext context) {
     // print("after initializing");
     // print('recent channels activated:'+_recentChannels.length.toString());
