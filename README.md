@@ -1,5 +1,5 @@
-# HalaSat TV Android
-An android client for HalaSat TV service.
+# HalaSat TV iOS
+An iOS client for HalaSat TV service.
 
 ## Get Packages
 ```bash
