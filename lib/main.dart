@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 
 import './src/screens/tv.dart';
 import './src/screens/players_list.dart';
+import './src/helpers/check_isp.dart';
 
 void main() {
   runApp(App());
@@ -16,67 +17,60 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  SharedPreferences _prefs;
-  bool _useDarkTheme = true;
-
-  AppState() {
-    _getTheme();
+  bool _isHalasat;
+  @override
+  void initState() {
+    checkIsp().then((isHalasat) {
+      setState(() => _isHalasat = isHalasat);
+      print('_isHalasat: ' +
+          _isHalasat.toString() +
+          ' and isHalasat: ' +
+          isHalasat.toString());
+    });
+    print('outside setState, _isHalasat: ' + _isHalasat.toString());
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'HalaSat TV',
-      theme: _useDarkTheme ? ThemeData.dark() : ThemeData.light(),
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            actions: <Widget>[
-              // Center(child: Text(_useDarkTheme ? 'Dark' : 'Light')),
-              Switch(
-                value: _useDarkTheme,
-                onChanged: (value) {
-                  _setTheme(value);
-                },
-              )
-            ],
-            leading: Icon(Icons.tv),
-            bottom: TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.live_tv)),
-                Tab(icon: Icon(Icons.message)),
+        // debugShowCheckedModeBanner: false,
+        title: 'HalaSat TV',
+        theme: ThemeData(
+          accentColor: Colors.blue,
+          primaryColor: Colors.black,
+          brightness: Brightness.dark,
+        ),
+        home: _buildHome(_isHalasat));
+  }
+
+  _buildHome(bool isHalasat) {
+    if (isHalasat == true)
+      return DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              bottom: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.live_tv)),
+                  Tab(icon: Icon(Icons.message)),
+                ],
+              ),
+              title: Text('HalaSat TV'),
+            ),
+            body: TabBarView(
+              children: [
+                TVScreen(),
+                PlayersListScreen(),
               ],
             ),
-            title: Text('HalaSat TV'),
-          ),
-          body: TabBarView(
-            children: [
-              TVScreen(),
-              PlayersListScreen(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Get the used theme from local storage (shared preferences).
-  /// If not set then the light theme will be set as default.
-  Future<void> _getTheme() async {
-    _prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _useDarkTheme = _prefs.getBool('use-dark-theme') ?? false;
-    });
-  }
-
-  /// Update the theme boolean on local storage.
-  /// the [value] is used to set the [_useDarkTheme] with the new theme.
-  Future<void> _setTheme(bool value) async {
-    setState(() {
-      _useDarkTheme = value;
-    });
-    await _prefs.setBool('use-dark-theme', _useDarkTheme);
+          ));
+    else if (_isHalasat == false)
+      return Scaffold(
+          appBar: AppBar(title: Text('HalaSat TV')), body: PlayersListScreen());
+    else
+      return Center(
+        child: CupertinoActivityIndicator(),
+      );
   }
 }

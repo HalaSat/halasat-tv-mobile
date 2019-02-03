@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:after_layout/after_layout.dart';
@@ -40,10 +41,10 @@ class ChannelsRowListState extends State<ChannelsRowList>
   GlobalKey key;
   List<ScrollController> scrollControllers = [];
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   @override
   void afterFirstLayout(BuildContext context) {
@@ -107,7 +108,6 @@ class ChannelsRowListState extends State<ChannelsRowList>
   @override
   Widget build(BuildContext context) {
     // print("building");
-
     return _channels != null
         ? ListView(
             cacheExtent: _nodesList.length * rowHeight,
@@ -257,7 +257,7 @@ class ChannelsRowListState extends State<ChannelsRowList>
             ],
           )
         : Center(
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(),
           );
   }
 

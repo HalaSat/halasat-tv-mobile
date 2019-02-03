@@ -38,7 +38,7 @@ class PlayerScreenState extends State<PlayerScreen> {
 //      'http://stream.shabakaty.com:6001/sport/ch22/ch22_360.m3u8',
     );
     Screen.isKeptOn.then((keptOn) {
-      if (!keptOn){
+      if (!keptOn) {
         print("Screen On:" + keptOn.toString());
         Screen.keepOn(true);
       }
@@ -54,75 +54,78 @@ class PlayerScreenState extends State<PlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text(_title),
+        ),
         body: ListView(physics: BouncingScrollPhysics(), children: <Widget>[
-      Chewie(
-        _controller,
-        aspectRatio: 16 / 9,
-        autoPlay: true,
-        looping: true,
-      ),
-      Container(
-          margin: EdgeInsets.only(top: 6.0, left: 6.0, bottom: 20.0),
-          child: Row(children: <Widget>[
-            CircleAvatar(
-              radius: 25.0,
-              backgroundImage: NetworkImage(_imageUrl),
-            ),
-            Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(_title,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Opacity(
-                          opacity: .5,
-                          child: Row(children: <Widget>[
-                            Icon(
-                              Icons.category,
-                              size: 13,
-                            ),
-                            Text(
-                              _category.toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 13,
-                              ),
-                            )
-                          ])),
-                    ])),
-            Expanded(
-              child: SizedBox(),
-            ),
-            Padding(
-                padding: EdgeInsets.only(right: 15),
-                child: DropdownButtonHideUnderline(
-                    child: DropdownButton(
-                  value: _qualityIndex,
-                  items: [
-                    DropdownMenuItem<int>(
-                      value: 0,
-                      child: Text('AUTO'),
-                    ),
-                    DropdownMenuItem<int>(
-                      value: 1,
-                      child: Text('SD'),
-                    ),
-                    DropdownMenuItem<int>(
-                      value: 2,
-                      child: Text('HD'),
-                    ),
-                  ],
-                  onChanged: (i) => _setQuality(_currentChannel, i),
-                )))
-          ])),
-      // Divider(),
-      PlayerChannelsRow(
-          category: _category,
-          excerpt: 'Recommended channels',
-          icon: Icons.explore,
-          onCardPressed: _onCardPressed,
-          channels: widget.channels),
-    ]));
+          Chewie(
+            _controller,
+            aspectRatio: 16 / 9,
+            autoPlay: true,
+            looping: true,
+          ),
+          Container(
+              margin: EdgeInsets.only(top: 6.0, left: 6.0, bottom: 20.0),
+              child: Row(children: <Widget>[
+                CircleAvatar(
+                  radius: 25.0,
+                  backgroundImage: NetworkImage(_imageUrl),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(_title,
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Opacity(
+                              opacity: .5,
+                              child: Row(children: <Widget>[
+                                Icon(
+                                  Icons.category,
+                                  size: 13,
+                                ),
+                                Text(
+                                  _category.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                  ),
+                                )
+                              ])),
+                        ])),
+                Expanded(
+                  child: Container(),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                      value: _qualityIndex,
+                      items: [
+                        DropdownMenuItem<int>(
+                          value: 0,
+                          child: Text('AUTO'),
+                        ),
+                        DropdownMenuItem<int>(
+                          value: 1,
+                          child: Text('SD'),
+                        ),
+                        DropdownMenuItem<int>(
+                          value: 2,
+                          child: Text('HD'),
+                        ),
+                      ],
+                      onChanged: (i) => _setQuality(_currentChannel, i),
+                    )))
+              ])),
+          // Divider(),
+          PlayerChannelsRow(
+              category: _category,
+              excerpt: 'Recommended channels',
+              icon: Icons.explore,
+              onCardPressed: _onCardPressed,
+              channels: widget.channels),
+        ]));
   }
 
   void _onCardPressed(Channel data, BuildContext context) {

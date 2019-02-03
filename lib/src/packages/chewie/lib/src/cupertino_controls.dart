@@ -125,9 +125,14 @@ class _CupertinoControlsState extends State<CupertinoControls> {
                   _buildSkipBack(iconColor, barHeight),
                   _buildPlayPause(controller, iconColor, barHeight),
                   _buildSkipForward(iconColor, barHeight),
-                  _buildPosition(iconColor),
-                  _buildProgressBar(),
-                  _buildRemaining(iconColor)
+                  Expanded(
+                      child: Text(
+                    'Live',
+                    style: TextStyle(color: Colors.red),
+                  )),
+                  // _buildPosition(iconColor),
+                  // _buildProgressBar(),
+                  // _buildRemaining(iconColor)
                 ],
               ),
             ),
@@ -425,16 +430,12 @@ class _CupertinoControlsState extends State<CupertinoControls> {
     return new Expanded(
       child: new Padding(
         padding: new EdgeInsets.only(right: 12.0),
-        child: new CupertinoVideoProgressBar(
-          widget.controller,
-          onDragStart: () {
-            _hideTimer?.cancel();
-          },
-          onDragEnd: () {
-            _startHideTimer();
-          },
-            colors: null
-        ),
+        child:
+            new CupertinoVideoProgressBar(widget.controller, onDragStart: () {
+          _hideTimer?.cancel();
+        }, onDragEnd: () {
+          _startHideTimer();
+        }, colors: null),
       ),
     );
   }
