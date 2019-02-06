@@ -4,5 +4,6 @@ import 'package:http/http.dart';
 Future<bool> checkIsp() async {
   Response res = await get('http://ip-api.com/json/');
   Map data = jsonDecode(res.body);
-  return data['isp'] == 'HALASAT-LTD';
+  return data['isp'] == 'Hala Al Rafidain Telecom Ltd' ||
+      data['isp'] == 'HALASAT-LTD';
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 
-import './src/screens/tv.dart';
-import './src/screens/players_list.dart';
+import './src/pages/tv.dart';
+import './src/pages/login.dart';
 import './src/helpers/check_isp.dart';
 
 void main() {
@@ -34,7 +34,11 @@ class AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          LoginPage.tag: (context) => LoginPage(),
+        },
+        debugShowCheckedModeBanner: false,
         title: 'HalaSat TV',
         theme: ThemeData(
           accentColor: Colors.blue,
@@ -60,14 +64,14 @@ class AppState extends State<App> {
             ),
             body: TabBarView(
               children: [
-                TVScreen(),
-                PlayersListScreen(),
+                TvPage(),
+                LoginPage(),
               ],
             ),
           ));
     else if (_isHalasat == false)
       return Scaffold(
-          appBar: AppBar(title: Text('HalaSat TV')), body: PlayersListScreen());
+          appBar: AppBar(title: Text('HalaSat TV')), body: LoginPage());
     else
       return Center(
         child: CupertinoActivityIndicator(),

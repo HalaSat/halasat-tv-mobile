@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:screen/screen.dart';
 
 import '../widgets/channels_row.dart';
-import '../screens/player.dart';
+import '../pages/player.dart';
 import '../models/channel.dart';
 import '../helpers/build_channels.dart';
 import '../helpers/constants.dart';
@@ -292,7 +292,7 @@ class ChannelsRowListState extends State<ChannelsRowList>
 
   _onCardPressed(Channel data, BuildContext context) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => PlayerScreen(data, _channels)));
+        MaterialPageRoute(builder: (context) => PlayerPage(data, _channels)));
   }
 
   void onKeyboardEvent(RawKeyEvent event) {

@@ -10,21 +10,21 @@ class ChannelCard extends StatelessWidget {
   final bool hasFocus;
   final Color tvColor = Colors.grey[300];
   final Color phoneColor = Colors.transparent;
-  Color appliedColor;
 
-  ChannelCard(
-      {@required this.data,
-      @required this.onPressed,
-      this.hasFocus,
-      this.isLastChild = false});
+  ChannelCard({
+    @required this.data,
+    @required this.onPressed,
+    this.hasFocus = false,
+    this.isLastChild = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     double screenSize = MediaQuery.of(context).size.width;
-    appliedColor = screenSize < 960.0 ? phoneColor : tvColor;
+    Color appliedColor = screenSize < 960.0 ? phoneColor : tvColor;
     return Container(
-        decoration: BoxDecoration(
-            color: hasFocus ? appliedColor : Colors.transparent),
+        decoration:
+            BoxDecoration(color: hasFocus ? appliedColor : Colors.transparent),
         margin: EdgeInsets.only(left: 15.0, right: isLastChild ? 15.0 : 0.0),
         child: InkWell(
           // radius: 10.0,

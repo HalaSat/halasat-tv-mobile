@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../widgets/channels_row_list.dart';
 
-class TVScreen extends StatefulWidget {
+class TvPage extends StatefulWidget {
   @override
-  _TVScreenState createState() {
-    return _TVScreenState();
+  _TvPageState createState() {
+    return _TvPageState();
   }
 }
 
-class _TVScreenState extends State<TVScreen>
-    with AutomaticKeepAliveClientMixin {
+class _TvPageState extends State<TvPage> with AutomaticKeepAliveClientMixin {
   @override
   void dispose() {
     super.dispose();

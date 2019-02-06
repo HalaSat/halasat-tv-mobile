@@ -3,8 +3,6 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import './chewie_progress_colors.dart';
-import './cupertino_progress_bar.dart';
-import './utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:open_iconic_flutter/open_iconic_flutter.dart';
@@ -280,36 +278,6 @@ class _CupertinoControlsState extends State<CupertinoControls> {
     );
   }
 
-  Widget _buildPosition(Color iconColor) {
-    final position =
-        _latestValue != null ? _latestValue.position : new Duration(seconds: 0);
-
-    return new Padding(
-      padding: new EdgeInsets.only(right: 12.0),
-      child: new Text(
-        formatDuration(position),
-        style: new TextStyle(
-          color: iconColor,
-          fontSize: 12.0,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRemaining(Color iconColor) {
-    final position = _latestValue != null && _latestValue.duration != null
-        ? _latestValue.duration - _latestValue.position
-        : new Duration(seconds: 0);
-
-    return new Padding(
-      padding: new EdgeInsets.only(right: 12.0),
-      child: new Text(
-        '-${formatDuration(position)}',
-        style: new TextStyle(color: iconColor, fontSize: 12.0),
-      ),
-    );
-  }
-
   GestureDetector _buildSkipBack(Color iconColor, double barHeight) {
     return new GestureDetector(
       onTap: _skipBack,
@@ -424,20 +392,6 @@ class _CupertinoControlsState extends State<CupertinoControls> {
         });
       });
     });
-  }
-
-  Widget _buildProgressBar() {
-    return new Expanded(
-      child: new Padding(
-        padding: new EdgeInsets.only(right: 12.0),
-        child:
-            new CupertinoVideoProgressBar(widget.controller, onDragStart: () {
-          _hideTimer?.cancel();
-        }, onDragEnd: () {
-          _startHideTimer();
-        }, colors: null),
-      ),
-    );
   }
 
   void _playPause() {

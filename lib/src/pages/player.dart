@@ -6,17 +6,17 @@ import '../packages/chewie/lib/chewie.dart';
 import '../widgets/channels_row_player.dart';
 import '../models/channel.dart';
 
-class PlayerScreen extends StatefulWidget {
+class PlayerPage extends StatefulWidget {
   final String imagesDirectory = 'http://91.106.32.84/images/';
   final Channel data;
   final List<Channel> channels;
-  PlayerScreen(this.data, this.channels);
+  PlayerPage(this.data, this.channels);
 
   @override
-  State<StatefulWidget> createState() => PlayerScreenState();
+  State<StatefulWidget> createState() => _PlayerPageState();
 }
 
-class PlayerScreenState extends State<PlayerScreen> {
+class _PlayerPageState extends State<PlayerPage> {
   VideoPlayerController _controller;
   Channel _currentChannel;
   String _title;
