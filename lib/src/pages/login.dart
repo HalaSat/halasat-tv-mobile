@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseUser;
 import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
+import 'package:image_picker/image_picker.dart';
 
 import '../helpers/auth.dart';
 import './chat.dart';
@@ -17,14 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RaisedButton(
-          child: Text('Go to chat'),
-          onPressed: () async => await Navigator.push(context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return ChatPage(
-                  user: null,
-                );
-              }))),
+      body: LoginForm(),
     );
   }
 }
@@ -45,6 +39,8 @@ class _LoginFormState extends State<LoginForm> {
   String _name;
   String _email;
   String _password;
+  String _photoUrl =
+      'https://firebasestorage.googleapis.com/v0/b/halasat-chat.appspot.com/o/users_profile_images%2Favatar.png?alt=media&token=9498b025-accc-4e8d-9da4-2b1d7c07a348';
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +81,7 @@ class _LoginFormState extends State<LoginForm> {
           : Text(_hasAccount ? 'Sign in' : 'Sign up'),
       onPressed: _isLoading ? null : () => _submit(_hasAccount),
     );
+
     return Form(
       key: _formKey,
       child: Column(
@@ -113,7 +110,7 @@ class _LoginFormState extends State<LoginForm> {
       setState(() {
         _isLoading = true;
       });
-      if (hasAccount)
+      if (hasAccount) {
         try {
           user = await auth.signIn(email: _email, password: _password);
           print('Signed in as $user');
@@ -121,16 +118,22 @@ class _LoginFormState extends State<LoginForm> {
         } catch (e) {
           print(e);
         }
-      else
+      } else {
         try {
           user = await auth.signUp(
-              name: _name, email: _email, password: _password);
+            name: _name,
+            email: _email,
+            password: _password,
+            photoUrl: _photoUrl,
+          );
 
+          // Debug
           print('Signed up as ${user.displayName}');
           _goToChat(user: user);
         } catch (e) {
           print(e);
         }
+      }
       setState(() {
         _isLoading = false;
       });

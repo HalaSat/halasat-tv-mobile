@@ -29,6 +29,7 @@ class Auth {
     @required String name,
     @required String email,
     @required String password,
+    @required String photoUrl,
   }) async {
     FirebaseUser user = await _auth.createUserWithEmailAndPassword(
         email: email, password: password);
@@ -37,8 +38,8 @@ class Auth {
     // Update the name from null to submitted name
     UserUpdateInfo userUpdateInfo = UserUpdateInfo();
     userUpdateInfo.displayName = name;
+    userUpdateInfo.photoUrl = photoUrl;
     await user.updateProfile(userUpdateInfo);
-
     // Get the updated user
     user = await _auth.currentUser();
 
