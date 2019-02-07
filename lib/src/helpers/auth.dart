@@ -6,7 +6,7 @@ class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// Sign in to an existing account using an [email] and [password]
-  /// and returns a [user]
+  /// and returns a [user].
   Future<FirebaseUser> signIn({
     @required String email,
     @required String password,
@@ -24,7 +24,7 @@ class Auth {
   }
 
   /// Sign up a new account using an [email] and [password]
-  /// and returns a [user]
+  /// and returns a [user].
   Future<FirebaseUser> signUp({
     @required String name,
     @required String email,
@@ -46,7 +46,12 @@ class Auth {
     return user;
   }
 
-  /// Sign out the current account
+  /// Tries to sign in a user with a given Custom Token [token].
+  Future<FirebaseUser> signInWithToken(String token) async {
+    return await _auth.signInWithCustomToken(token: token);
+  }
+
+  /// Sign out the current account.
   Future<void> signOut() async {
     await _auth.signOut();
   }

@@ -18,9 +18,10 @@ class _ChatPageState extends State<ChatPage> {
   final GlobalKey<FormState> _messageInputFormKey = GlobalKey<FormState>();
   final Firestore _firestore = Firestore.instance;
   String _message;
-
+  Size _size;
   @override
   Widget build(BuildContext context) {
+    _size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('GLOBAL CHAT'),
@@ -60,34 +61,94 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildChatItem(BuildContext context, Map message) {
-    return Text(message['content']);
+    DateTime date = DateTime.fromMicrosecondsSinceEpoch(
+            message['timestamp'].millisecondsSinceEpoch * 1000)
+        .toLocal();
+    String dateString =
+        '${date.day}-${date.month}-${date.year} ${date.hour}:${date.minute}';
+    return Container(
+      margin: EdgeInsets.only(right: 5.0, left: 5.0, bottom: 10.0, top: 10.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: CircleAvatar(
+              radius: 25.0,
+              backgroundImage: NetworkImage(message['from']['photo']),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text(
+                message['from']['name'],
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: widget.user.email == message['from']['email']
+                      ? Theme.of(context).accentColor
+                      : Colors.white,
+                ),
+              ),
+              Container(
+                width: (_size.width - 25.0) / 1.2,
+                child: Text(message['content']),
+              ),
+              Text(
+                dateString,
+                style: TextStyle(color: Colors.white54, fontSize: 11.0),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildMessageInput(BuildContext context) {
-    return Form(
-      key: _messageInputFormKey,
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextFormField(onSaved: (value) => _message = value),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5.0),
+      child: Container(
+        color: Colors.white12,
+        child: Form(
+          key: _messageInputFormKey,
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(left: 10.0)),
+                  maxLines: null,
+                  maxLengthEnforced: false,
+                  textCapitalization: TextCapitalization.sentences,
+                  onSaved: (value) => _message = value,
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.send,
+                  color: Theme.of(context).accentColor,
+                ),
+                onPressed: () {
+                  _messageInputFormKey.currentState.save();
+                  if (_message.trim().isNotEmpty)
+                    _firestore.collection('messages').add({
+                      'content': _message,
+                      'timestamp': DateTime.now(),
+                      'from': {
+                        'name': widget.user.displayName,
+                        'photo': widget.user.photoUrl,
+                        'email': widget.user.email,
+                      },
+                    });
+                  _messageInputFormKey.currentState.reset();
+                },
+              ),
+            ],
           ),
-          IconButton(
-            icon: Icon(
-              Icons.send,
-              color: Theme.of(context).accentColor,
-            ),
-            onPressed: () {
-              _messageInputFormKey.currentState.save();
-              if (_message.trim().isNotEmpty)
-                _firestore.collection('messages').add({
-                  'content': _message,
-                  'timestamp': DateTime.now(),
-                  'from': 'Mohammed Salman',
-                });
-              _messageInputFormKey.currentState.reset();
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
