@@ -127,7 +127,10 @@ class _ChatPageState extends State<ChatPage> {
               ),
               Container(
                 width: (_size.width - 25.0) / 1.2,
-                child: Text(message['content']),
+                child: Text(
+                  message['content'],
+                  textDirection: TextDirection.rtl,
+                ),
               ),
               Text(
                 dateString,

@@ -43,6 +43,8 @@ class _LoginFormState extends State<LoginForm> {
   final auth = Auth();
   final _formKey = GlobalKey<FormState>();
 
+  bool _isLoadingImage = false;
+  bool _isLoading = false;
   FirebaseUser _user;
   bool _hasAccount = true;
   String _name;
@@ -98,6 +100,7 @@ class _LoginFormState extends State<LoginForm> {
         radius: 50.0,
         backgroundColor: Colors.blue,
         backgroundImage: NetworkImage(_photoUrl),
+        child: _isLoadingImage ? CupertinoActivityIndicator() : Container(),
       ),
       onTap: () {
         // Generate a unique id for the image, it may use the same uuid
@@ -105,30 +108,26 @@ class _LoginFormState extends State<LoginForm> {
         // TODO: Use user uuid instead
 
         String imageName = Uuid().v1();
-        _pickAndUploadImage('users_profile_images/$imageName.png').then(
-          (url) => setState(
-                () {
+        setState(() => _isLoadingImage = true);
+        _pickAndUploadImage('users_profile_images/$imageName.png')
+            .then((url) => setState(() {
                   _photoUrl = url;
-                },
-              ),
-        );
+                  _isLoadingImage = false;
+                }));
       },
     );
     Widget _submitButton = RaisedButton(
-      child: ScopedModel.of<AccountModel>(context).status ==
-              AccountStatus.signedOut
+      child: !_isLoading
           ? Text(_hasAccount ? 'Sign in' : 'Sign up')
           : const CupertinoActivityIndicator(),
-      onPressed:
-          ScopedModel.of<AccountModel>(context).status == AccountStatus.signing
-              ? null
-              : () => _submit(context, _hasAccount),
+      onPressed: _isLoading ? null : () => _submit(context, _hasAccount),
     );
 
     return ScopedModelDescendant<AccountModel>(
       builder: (BuildContext context, Widget _, AccountModel account) {
         if (account.status == AccountStatus.signedOut)
           return Form(
+            // autovalidate: true,
             key: _formKey,
             child: ListView(
               padding: const EdgeInsets.all(10.0),
@@ -151,62 +150,62 @@ class _LoginFormState extends State<LoginForm> {
               ],
             ),
           );
-        else if (account.status == AccountStatus.signedIn)
-          return ChatPage(user: _user);
         else
-          return Center(
-            child: const CupertinoActivityIndicator(),
-          );
+          return ChatPage(user: _user);
       },
     );
   }
 
   Future<void> _submit(BuildContext context, bool hasAccount) async {
+    setState(() {
+      _isLoading = true;
+    });
     FirebaseUser user;
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       if (hasAccount) {
         try {
-          ScopedModel.of<AccountModel>(context).status = AccountStatus.signing;
-          user =
-              await auth.signIn(email: _email, password: _password).then((_) {
-            ScopedModel.of<AccountModel>(context).status =
-                AccountStatus.signedIn;
-          });
+          user = await auth.signIn(email: _email, password: _password);
 
+          ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
           // Debug
           print('Signed in as $user');
         } catch (error) {
+          print(error);
           ScopedModel.of<AccountModel>(context).status =
               AccountStatus.signedOut;
           Scaffold.of(context).showSnackBar(SnackBar(
-            content: const Text('An error occured while signin in'),
+            content: Text(error.message),
+            backgroundColor: Colors.red,
+          ));
+        }
+      } else {
+        try {
+          user = await auth.signUp(
+            name: _name,
+            email: _email,
+            password: _password,
+            photoUrl: _photoUrl,
+          );
+          ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
+
+          // Debug
+          print('Signed up as ${user.displayName}');
+        } catch (error) {
+          print(error);
+
+          ScopedModel.of<AccountModel>(context).status =
+              AccountStatus.signedOut;
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(error.message),
+            backgroundColor: Colors.red,
           ));
         }
       }
-    } else {
-      try {
-        ScopedModel.of<AccountModel>(context).status = AccountStatus.signing;
-        user = await auth
-            .signUp(
-          name: _name,
-          email: _email,
-          password: _password,
-          photoUrl: _photoUrl,
-        )
-            .then((_) {
-          ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
-        });
-
-        // Debug
-        print('Signed up as ${user.displayName}');
-      } catch (error) {
-        ScopedModel.of<AccountModel>(context).status = AccountStatus.signedOut;
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: const Text('An error occured while signin up'),
-        ));
-      }
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   /// Pick an image from gallery and upload to the specified [path]

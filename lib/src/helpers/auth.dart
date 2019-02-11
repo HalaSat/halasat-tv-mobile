@@ -25,7 +25,6 @@ class Auth {
     final FirebaseUser currentUser = await _auth.currentUser();
     // Check if the user was signed in successfully
     assert(user.uid == currentUser.uid);
-
     return user;
   }
 
@@ -56,11 +55,6 @@ class Auth {
       'photoUrl': photoUrl
     }).then(print);
     return user;
-  }
-
-  /// Tries to sign in a user with a given Custom Token [token].
-  Future<FirebaseUser> signInWithToken(String token) async {
-    return _auth.signInWithCustomToken(token: token);
   }
 
   /// Sign out the current account.

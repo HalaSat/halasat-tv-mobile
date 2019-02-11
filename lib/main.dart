@@ -51,8 +51,8 @@ class AppState extends State<App> {
         debugShowCheckedModeBanner: false,
         title: 'HalaSat TV',
         theme: ThemeData(
-          accentColor: Colors.red,
-          buttonColor: Colors.red,
+          accentColor: Colors.pink,
+          buttonColor: Colors.pink,
           primaryColor: Colors.black,
           brightness: Brightness.dark,
         ),
@@ -66,15 +66,19 @@ class AppState extends State<App> {
           child: Scaffold(
             appBar: AppBar(
               actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.exit_to_app),
-                  onPressed: () {
-                    ScopedModel.of<AccountModel>(context).status =
-                        AccountStatus.signing;
-                    _auth.signOut().then((void v) {
-                      ScopedModel.of<AccountModel>(context).status =
-                          AccountStatus.signedOut;
-                    });
+                ScopedModelDescendant<AccountModel>(
+                  builder:
+                      (BuildContext context, Widget _, AccountModel account) {
+                    return account.status == AccountStatus.signedIn
+                        ? IconButton(
+                            icon: Icon(Icons.exit_to_app),
+                            onPressed: () {
+                              _auth.signOut().then((void v) {
+                                account.status = AccountStatus.signedOut;
+                              });
+                            },
+                          )
+                        : Container();
                   },
                 )
               ],
@@ -101,8 +105,6 @@ class AppState extends State<App> {
               IconButton(
                 icon: Icon(Icons.exit_to_app),
                 onPressed: () {
-                  ScopedModel.of<AccountModel>(context).status =
-                      AccountStatus.signing;
                   _auth.signOut().then((void v) {
                     ScopedModel.of<AccountModel>(context).status =
                         AccountStatus.signedOut;

@@ -1,13 +1,12 @@
 import 'package:scoped_model/scoped_model.dart';
 
 enum AccountStatus {
-  signing,
   signedIn,
   signedOut,
 }
 
 class AccountModel extends Model {
-  AccountStatus _status = AccountStatus.signing;
+  AccountStatus _status = AccountStatus.signedOut;
   get status => _status;
   set status(AccountStatus s) {
     print(s);
