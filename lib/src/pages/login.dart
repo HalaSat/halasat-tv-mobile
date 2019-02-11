@@ -5,9 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseUser;
 import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:uuid/uuid.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/account.dart';
 import '../helpers/constants.dart' show DEFAULT_AVATAR_URL;
 import '../helpers/auth.dart';
 import './chat.dart';
@@ -20,14 +21,15 @@ class LoginPage extends StatefulWidget {
   }
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: LoginForm(),
-    );
+    return LoginForm();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class LoginForm extends StatefulWidget {
@@ -41,27 +43,25 @@ class _LoginFormState extends State<LoginForm> {
   final auth = Auth();
   final _formKey = GlobalKey<FormState>();
 
-  // SharedPreferences _sharedPreferences;
-  bool _isLoading = false;
+  FirebaseUser _user;
   bool _hasAccount = true;
   String _name;
   String _email;
   String _password;
   String _photoUrl = DEFAULT_AVATAR_URL;
 
-  // @override
-  // void initState() {
-  //   SharedPreferences.getInstance().then((instance) {
-  //     _sharedPreferences = instance;
-  //     String token = _sharedPreferences.getString('token');
-  //     if (token != null) _signIn(token).then((void v) => super.initState());
-  //   });
-
-  //   ;
-  // }
-
   @override
   Widget build(BuildContext context) {
+    print(ScopedModel.of<AccountModel>(context).status);
+    auth.currentUser().then((user) {
+      if (user != null) {
+        _user = user;
+        ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
+      } else {
+        ScopedModel.of<AccountModel>(context).status = AccountStatus.signedOut;
+      }
+    });
+
     Widget _nameField = TextFormField(
       maxLines: 1,
       keyboardType: TextInputType.text,
@@ -106,86 +106,106 @@ class _LoginFormState extends State<LoginForm> {
 
         String imageName = Uuid().v1();
         _pickAndUploadImage('users_profile_images/$imageName.png').then(
-          (url) => setState(() {
-                _photoUrl = url;
-              }),
+          (url) => setState(
+                () {
+                  _photoUrl = url;
+                },
+              ),
         );
       },
     );
     Widget _submitButton = RaisedButton(
-      child: _isLoading
-          ? const CupertinoActivityIndicator()
-          : Text(_hasAccount ? 'Sign in' : 'Sign up'),
-      onPressed: _isLoading ? null : () => _submit(_hasAccount),
+      child: ScopedModel.of<AccountModel>(context).status ==
+              AccountStatus.signedOut
+          ? Text(_hasAccount ? 'Sign in' : 'Sign up')
+          : const CupertinoActivityIndicator(),
+      onPressed:
+          ScopedModel.of<AccountModel>(context).status == AccountStatus.signing
+              ? null
+              : () => _submit(context, _hasAccount),
     );
 
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      child: Form(
-        key: _formKey,
-        child: Flex(
-          direction: Axis.vertical,
-          children: <Widget>[
-            _hasAccount ? Container() : _selectImageField,
-            _hasAccount ? Container() : _nameField,
-            _emailField,
-            _passwordField,
-            _submitButton,
-            FlatButton(
-              child: Text(_hasAccount
-                  ? 'Create a new account'
-                  : 'Already have an account'),
-              onPressed: () {
-                setState(() => _hasAccount = !_hasAccount);
-              },
-            )
-          ],
-        ),
-      ),
+    return ScopedModelDescendant<AccountModel>(
+      builder: (BuildContext context, Widget _, AccountModel account) {
+        if (account.status == AccountStatus.signedOut)
+          return Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(10.0),
+              children: <Widget>[
+                Align(
+                  child: _hasAccount ? Container() : _selectImageField,
+                ),
+                _hasAccount ? Container() : _nameField,
+                _emailField,
+                _passwordField,
+                _submitButton,
+                FlatButton(
+                  child: Text(_hasAccount
+                      ? 'Create a new account'
+                      : 'Already have an account'),
+                  onPressed: () {
+                    setState(() => _hasAccount = !_hasAccount);
+                  },
+                )
+              ],
+            ),
+          );
+        else if (account.status == AccountStatus.signedIn)
+          return ChatPage(user: _user);
+        else
+          return Center(
+            child: const CupertinoActivityIndicator(),
+          );
+      },
     );
   }
 
-  Future<void> _submit(hasAccount) async {
+  Future<void> _submit(BuildContext context, bool hasAccount) async {
     FirebaseUser user;
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      setState(() {
-        _isLoading = true;
-      });
       if (hasAccount) {
         try {
-          user = await auth.signIn(email: _email, password: _password);
+          ScopedModel.of<AccountModel>(context).status = AccountStatus.signing;
+          user =
+              await auth.signIn(email: _email, password: _password).then((_) {
+            ScopedModel.of<AccountModel>(context).status =
+                AccountStatus.signedIn;
+          });
+
           // Debug
           print('Signed in as $user');
-          // String token = await user.getIdToken();
-          // await _sharedPreferences.setString('token', token);
-
-          _goToChat(user: user);
-        } catch (e) {
-          print(e);
-        }
-      } else {
-        try {
-          user = await auth.signUp(
-            name: _name,
-            email: _email,
-            password: _password,
-            photoUrl: _photoUrl,
-          );
-
-          // Debug
-          print('Signed up as ${user.displayName}');
-          // String token = await user.getIdToken();
-          // await _sharedPreferences.setString('token', token);
-
-          _goToChat(user: user);
-        } catch (e) {
-          print(e);
+        } catch (error) {
+          ScopedModel.of<AccountModel>(context).status =
+              AccountStatus.signedOut;
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: const Text('An error occured while signin in'),
+          ));
         }
       }
-      setState(() {
-        _isLoading = false;
-      });
+    } else {
+      try {
+        ScopedModel.of<AccountModel>(context).status = AccountStatus.signing;
+        user = await auth
+            .signUp(
+          name: _name,
+          email: _email,
+          password: _password,
+          photoUrl: _photoUrl,
+        )
+            .then((_) {
+          ScopedModel.of<AccountModel>(context).status = AccountStatus.signedIn;
+        });
+
+        // Debug
+        print('Signed up as ${user.displayName}');
+      } catch (error) {
+        ScopedModel.of<AccountModel>(context).status = AccountStatus.signedOut;
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: const Text('An error occured while signin up'),
+        ));
+      }
     }
   }
 
@@ -205,20 +225,6 @@ class _LoginFormState extends State<LoginForm> {
       return await taskSnapshot.ref.getDownloadURL();
     }
     return _photoUrl;
-  }
-
-  // Future<void> _signIn(String token) async {
-  //   FirebaseUser user = await auth.signInWithToken(token);
-  //   _goToChat(user: user);
-  // }
-
-  void _goToChat({@required FirebaseUser user}) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => ChatPage(user: user),
-      ),
-    );
   }
 
   String _nameValidator(String value) {

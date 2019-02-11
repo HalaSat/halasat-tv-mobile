@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
-
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseUser;
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../helpers/check_isp.dart';
 
 class ChatPage extends StatefulWidget {
   final FirebaseUser user;
@@ -17,23 +18,51 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final GlobalKey<FormState> _messageInputFormKey = GlobalKey<FormState>();
   final Firestore _firestore = Firestore.instance;
+
   String _message;
   Size _size;
+  // bool _isHalasat;
+
+  @override
+  void initState() {
+    // checkIsp().then((bool isHalasat) {
+    //   setState(() => _isHalasat = isHalasat);
+    // });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('GLOBAL CHAT'),
-      ),
-      body: Flex(
-        direction: Axis.vertical,
-        children: <Widget>[
-          _buildChatList(context),
-          _buildMessageInput(context),
-        ],
-      ),
+    return _buildChat(context);
+  }
+
+  Widget _buildChat(BuildContext context) {
+    // if (isHalasat == true)
+    return Flex(
+      direction: Axis.vertical,
+      children: <Widget>[
+        _buildChatList(context),
+        _buildMessageInput(context),
+      ],
     );
+    // else if (isHalasat == false)
+    //   return Scaffold(
+    //     appBar: AppBar(
+    //       title: Text('GLOBAL CHAT'),
+    //     ),
+    //     body: Flex(
+    //       direction: Axis.vertical,
+    //       children: <Widget>[
+    //         _buildChatList(context),
+    //         _buildMessageInput(context),
+    //       ],
+    //     ),
+    //   );
+    // else
+    //   return Center(
+    //     child: CupertinoActivityIndicator(),
+    //   );
   }
 
   Widget _buildChatList(BuildContext context) {
@@ -47,12 +76,17 @@ class _ChatPageState extends State<ChatPage> {
         if (!snapshot.hasData)
           return Expanded(child: CupertinoActivityIndicator());
         return Flexible(
-          child: ListView.builder(
-            reverse: true,
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _buildChatItem(
-                  context, snapshot.data.documents[index].data);
+          child: GestureDetector(
+            child: ListView.builder(
+              reverse: true,
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _buildChatItem(
+                    context, snapshot.data.documents[index].data);
+              },
+            ),
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
             },
           ),
         );
@@ -86,7 +120,7 @@ class _ChatPageState extends State<ChatPage> {
                 message['from']['name'],
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: widget.user.email == message['from']['email']
+                  color: widget.user?.email == message['from']['email']
                       ? Theme.of(context).accentColor
                       : Colors.white,
                 ),

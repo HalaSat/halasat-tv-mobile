@@ -1,9 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 class Auth {
   // Create an instance of [FirebaseAuth]
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
+
+  Future<FirebaseUser> currentUser() {
+    return _auth.currentUser();
+  }
 
   /// Sign in to an existing account using an [email] and [password]
   /// and returns a [user].
@@ -43,12 +49,18 @@ class Auth {
     // Get the updated user
     user = await _auth.currentUser();
 
+    _firestore.collection('users').add({
+      'name': name,
+      'email': email,
+      'password': password,
+      'photoUrl': photoUrl
+    }).then(print);
     return user;
   }
 
   /// Tries to sign in a user with a given Custom Token [token].
   Future<FirebaseUser> signInWithToken(String token) async {
-    return await _auth.signInWithCustomToken(token: token);
+    return _auth.signInWithCustomToken(token: token);
   }
 
   /// Sign out the current account.
