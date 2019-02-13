@@ -1,19 +1,22 @@
 import 'dart:convert';
-import '../meta/channels.dart';
-import '../models/channel.dart';
+
 import 'package:flutter/foundation.dart';
-import 'dart:async';
 import 'package:http/http.dart' as http;
 
-List<Channel> _buildChannelsList({@required List<dynamic> jsonData}) {
-  return jsonData.map((item) => Channel(channelData: item)).toList();
-}
+import '../meta/channels.dart';
+import '../models/channel.dart';
 
 Future<List<Channel>> getRawChannelsData(String url) async {
-  List<Channel> channels;
+  // List<Channel> channels;
   await http.get(url).then((res) {
     List temp = json.decode((res.body));
     channels = _buildChannelsList(jsonData: temp);
   });
   return channels;
 }
+
+List<Channel> _buildChannelsList({@required List jsonData}) {
+  return jsonData.map((item) => Channel(channelData: Map.from(item))).toList();
+}
+
+List<Channel> getLocalChannels() => channels;

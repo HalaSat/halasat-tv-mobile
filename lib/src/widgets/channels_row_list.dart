@@ -40,35 +40,27 @@ class ChannelsRowListState extends State<ChannelsRowList>
   double rowHeight = 260;
   GlobalKey key;
   List<ScrollController> scrollControllers = [];
+  PersistentBottomSheetController _bottomSheetController;
+  bool _channelsLoaded;
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _bottomSheetController.close();
+    super.dispose();
+  }
 
   @override
   void afterFirstLayout(BuildContext context) {
-    // print("after initializing");
-    // print('recent channels activated:'+_recentChannels.length.toString());
-    _setChannels().then((result) {
-      //  print('future result is :'+ result.toString());
-      //  print('future result:' + _nodesList.length.toString());
+    _setChannels(context).then((result) {
       if (result) {
         _nodesList.insert(0, recentNode);
       }
-      // print('future result:' + _nodesList.length.toString());
       if (isFirst) {
         FocusScope.of(context).requestFocus(_nodesList.first);
         inFocusIndex = _nodesList.indexOf(_nodesList.first);
         isFirst = false;
       }
     });
-    // inFocus = _recentChannels.length == 0 ? sportNode : recentNode;
-    // if (isFirst) {
-    //   FocusScope.of(context).requestFocus(inFocus);
-    //   inFocusIndex = _nodesList.indexOf(inFocus);
-    //   isFirst = false;
-    // }
   }
 
   @override
@@ -107,166 +99,211 @@ class ChannelsRowListState extends State<ChannelsRowList>
 
   @override
   Widget build(BuildContext context) {
-    // print("building");
-    return _channels != null
-        ? ListView(
-            cacheExtent: _nodesList.length * rowHeight,
-            controller: cont,
-            padding: EdgeInsets.only(top: 10.0),
-            children: <Widget>[
-              _recentChannels.isNotEmpty
-                  ? RawKeyboardListener(
-                      child: ChannelsRow(
-                        setCardsNumber: setCardsNumber,
-                        category: 'Recent',
-                        excerpt: 'Recent Channels',
-                        icon: Icons.history,
-                        onCardPressed: _onCardPressed,
-                        iconColor: Colors.purple,
-                        channels: _recentChannels,
-                        rowHasFocus: inFocusIndex == 0 ? true : false,
-                        inFocusCardIndex: inFocusCardIndex,
-                        scrollController: scrollControllers[0],
-                        cardPhysicalKeyListener: onKeyboardEvent,
-                        setFocusedChannel: setInFocusChannel,
-                      ),
-                      focusNode: _nodesList[0],
-                      onKey: onKeyboardEvent,
-                    )
-                  : Text(''),
-              RawKeyboardListener(
-                key: key,
-                child: ChannelsRow(
-                  setCardsNumber: setCardsNumber,
-                  category: 'Sports',
-                  excerpt: 'Top Sports Channels',
-                  icon: Icons.directions_run,
-                  onCardPressed: _onCardPressed,
-                  iconColor: Colors.green,
-                  channels: _channels,
-                  rowHasFocus:
-                      inFocusIndex == _nodesList.indexOf(_nodesList.last) - 4
-                          ? true
-                          : false,
-                  scrollController: _recentChannels.isEmpty
-                      ? scrollControllers[0]
-                      : scrollControllers[1],
-                  inFocusCardIndex: inFocusCardIndex,
-                  cardPhysicalKeyListener: onKeyboardEvent,
-                  setFocusedChannel: setInFocusChannel,
-                ),
-                focusNode:
-                    _recentChannels.isEmpty ? _nodesList[0] : _nodesList[1],
-                onKey: onKeyboardEvent,
-              ),
-              RawKeyboardListener(
-                child: ChannelsRow(
-                  setCardsNumber: setCardsNumber,
-                  category: 'Entertainment',
-                  excerpt: 'Entertainment and News',
-                  icon: Icons.featured_video,
-                  onCardPressed: _onCardPressed,
-                  iconColor: Colors.orange,
-                  channels: _channels,
-                  rowHasFocus:
-                      inFocusIndex == _nodesList.indexOf(_nodesList.last) - 3
-                          ? true
-                          : false,
-                  inFocusCardIndex: inFocusCardIndex,
-                  scrollController: _recentChannels.isEmpty
-                      ? scrollControllers[1]
-                      : scrollControllers[2],
-                  cardPhysicalKeyListener: onKeyboardEvent,
-                  setFocusedChannel: setInFocusChannel,
-                ),
-                focusNode:
-                    _recentChannels.isEmpty ? _nodesList[1] : _nodesList[2],
-                onKey: onKeyboardEvent,
-              ),
-              RawKeyboardListener(
-                child: ChannelsRow(
-                  setCardsNumber: setCardsNumber,
-                  category: 'Movies',
-                  excerpt: 'Movies and TV Shows',
-                  icon: Icons.movie,
-                  onCardPressed: _onCardPressed,
-                  iconColor: Colors.red,
-                  channels: _channels,
-                  rowHasFocus:
-                      inFocusIndex == _nodesList.indexOf(_nodesList.last) - 2
-                          ? true
-                          : false,
-                  inFocusCardIndex: inFocusCardIndex,
-                  scrollController: _recentChannels.isEmpty
-                      ? scrollControllers[2]
-                      : scrollControllers[3],
-                  cardPhysicalKeyListener: onKeyboardEvent,
-                  setFocusedChannel: setInFocusChannel,
-                ),
-                focusNode:
-                    _recentChannels.isEmpty ? _nodesList[2] : _nodesList[3],
-                onKey: onKeyboardEvent,
-              ),
-              RawKeyboardListener(
-                child: ChannelsRow(
-                  setCardsNumber: setCardsNumber,
-                  category: 'Kids',
-                  excerpt: 'Channels Tailored for Kids',
-                  icon: Icons.child_care,
-                  onCardPressed: _onCardPressed,
-                  iconColor: Colors.pink,
-                  channels: _channels,
-                  rowHasFocus:
-                      inFocusIndex == _nodesList.indexOf(_nodesList.last) - 1
-                          ? true
-                          : false,
-                  scrollController: _recentChannels.isEmpty
-                      ? scrollControllers[3]
-                      : scrollControllers[4],
-                  inFocusCardIndex: inFocusCardIndex,
-                  cardPhysicalKeyListener: onKeyboardEvent,
-                  setFocusedChannel: setInFocusChannel,
-                ),
-                focusNode:
-                    _recentChannels.isEmpty ? _nodesList[3] : _nodesList[4],
-                onKey: onKeyboardEvent,
-              ),
-              RawKeyboardListener(
-                child: ChannelsRow(
-                  setCardsNumber: setCardsNumber,
-                  category: 'Music',
-                  excerpt: 'Top Music Channels',
-                  icon: Icons.music_note,
-                  onCardPressed: _onCardPressed,
-                  iconColor: Colors.cyan,
-                  channels: _channels,
-                  rowHasFocus:
-                      inFocusIndex == _nodesList.indexOf(_nodesList.last)
-                          ? true
-                          : false,
-                  inFocusCardIndex: inFocusCardIndex,
-                  scrollController: _recentChannels.isEmpty
-                      ? scrollControllers[4]
-                      : scrollControllers[5],
-                  cardPhysicalKeyListener: onKeyboardEvent,
-                  setFocusedChannel: setInFocusChannel,
-                ),
-                focusNode: _nodesList[_nodesList.indexOf(_nodesList.last)],
-                onKey: onKeyboardEvent,
-              ),
-            ],
-          )
-        : Center(
-            child: CupertinoActivityIndicator(),
-          );
+    return RefreshIndicator(
+        onRefresh: () async {
+          await _setChannels(context);
+        },
+        child: _buildChannels(context));
   }
 
-  Future<bool> _setChannels() async {
-    List<Channel> items = await getRawChannelsData(CHANNELS_URL);
-    var result = await _setRecentChannels(items);
+  Widget _buildChannels(BuildContext context) {
+    if (_channelsLoaded == true)
+      return ListView(
+        cacheExtent: _nodesList.length * rowHeight,
+        controller: cont,
+        padding: EdgeInsets.only(top: 10.0),
+        children: <Widget>[
+          _recentChannels.isNotEmpty
+              ? RawKeyboardListener(
+                  child: ChannelsRow(
+                    setCardsNumber: setCardsNumber,
+                    category: 'Recent',
+                    excerpt: 'Recent Channels',
+                    icon: Icons.history,
+                    onCardPressed: _onCardPressed,
+                    iconColor: Colors.purple,
+                    channels: _recentChannels,
+                    rowHasFocus: inFocusIndex == 0 ? true : false,
+                    inFocusCardIndex: inFocusCardIndex,
+                    scrollController: scrollControllers[0],
+                    cardPhysicalKeyListener: onKeyboardEvent,
+                    setFocusedChannel: setInFocusChannel,
+                  ),
+                  focusNode: _nodesList[0],
+                  onKey: onKeyboardEvent,
+                )
+              : Text(''),
+          RawKeyboardListener(
+            key: key,
+            child: ChannelsRow(
+              setCardsNumber: setCardsNumber,
+              category: 'Sports',
+              excerpt: 'Top Sports Channels',
+              icon: Icons.directions_run,
+              onCardPressed: _onCardPressed,
+              iconColor: Colors.green,
+              channels: _channels,
+              rowHasFocus:
+                  inFocusIndex == _nodesList.indexOf(_nodesList.last) - 4
+                      ? true
+                      : false,
+              scrollController: _recentChannels.isEmpty
+                  ? scrollControllers[0]
+                  : scrollControllers[1],
+              inFocusCardIndex: inFocusCardIndex,
+              cardPhysicalKeyListener: onKeyboardEvent,
+              setFocusedChannel: setInFocusChannel,
+            ),
+            focusNode: _recentChannels.isEmpty ? _nodesList[0] : _nodesList[1],
+            onKey: onKeyboardEvent,
+          ),
+          RawKeyboardListener(
+            child: ChannelsRow(
+              setCardsNumber: setCardsNumber,
+              category: 'Entertainment',
+              excerpt: 'Entertainment and News',
+              icon: Icons.featured_video,
+              onCardPressed: _onCardPressed,
+              iconColor: Colors.orange,
+              channels: _channels,
+              rowHasFocus:
+                  inFocusIndex == _nodesList.indexOf(_nodesList.last) - 3
+                      ? true
+                      : false,
+              inFocusCardIndex: inFocusCardIndex,
+              scrollController: _recentChannels.isEmpty
+                  ? scrollControllers[1]
+                  : scrollControllers[2],
+              cardPhysicalKeyListener: onKeyboardEvent,
+              setFocusedChannel: setInFocusChannel,
+            ),
+            focusNode: _recentChannels.isEmpty ? _nodesList[1] : _nodesList[2],
+            onKey: onKeyboardEvent,
+          ),
+          RawKeyboardListener(
+            child: ChannelsRow(
+              setCardsNumber: setCardsNumber,
+              category: 'Movies',
+              excerpt: 'Movies and TV Shows',
+              icon: Icons.movie,
+              onCardPressed: _onCardPressed,
+              iconColor: Colors.red,
+              channels: _channels,
+              rowHasFocus:
+                  inFocusIndex == _nodesList.indexOf(_nodesList.last) - 2
+                      ? true
+                      : false,
+              inFocusCardIndex: inFocusCardIndex,
+              scrollController: _recentChannels.isEmpty
+                  ? scrollControllers[2]
+                  : scrollControllers[3],
+              cardPhysicalKeyListener: onKeyboardEvent,
+              setFocusedChannel: setInFocusChannel,
+            ),
+            focusNode: _recentChannels.isEmpty ? _nodesList[2] : _nodesList[3],
+            onKey: onKeyboardEvent,
+          ),
+          RawKeyboardListener(
+            child: ChannelsRow(
+              setCardsNumber: setCardsNumber,
+              category: 'Kids',
+              excerpt: 'Channels Tailored for Kids',
+              icon: Icons.child_care,
+              onCardPressed: _onCardPressed,
+              iconColor: Colors.pink,
+              channels: _channels,
+              rowHasFocus:
+                  inFocusIndex == _nodesList.indexOf(_nodesList.last) - 1
+                      ? true
+                      : false,
+              scrollController: _recentChannels.isEmpty
+                  ? scrollControllers[3]
+                  : scrollControllers[4],
+              inFocusCardIndex: inFocusCardIndex,
+              cardPhysicalKeyListener: onKeyboardEvent,
+              setFocusedChannel: setInFocusChannel,
+            ),
+            focusNode: _recentChannels.isEmpty ? _nodesList[3] : _nodesList[4],
+            onKey: onKeyboardEvent,
+          ),
+          RawKeyboardListener(
+            child: ChannelsRow(
+              setCardsNumber: setCardsNumber,
+              category: 'Music',
+              excerpt: 'Top Music Channels',
+              icon: Icons.music_note,
+              onCardPressed: _onCardPressed,
+              iconColor: Colors.cyan,
+              channels: _channels,
+              rowHasFocus: inFocusIndex == _nodesList.indexOf(_nodesList.last)
+                  ? true
+                  : false,
+              inFocusCardIndex: inFocusCardIndex,
+              scrollController: _recentChannels.isEmpty
+                  ? scrollControllers[4]
+                  : scrollControllers[5],
+              cardPhysicalKeyListener: onKeyboardEvent,
+              setFocusedChannel: setInFocusChannel,
+            ),
+            focusNode: _nodesList[_nodesList.indexOf(_nodesList.last)],
+            onKey: onKeyboardEvent,
+          ),
+        ],
+      );
+    else if (_channelsLoaded == false)
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.rotate_left),
+              onPressed: () => _setChannels(context),
+            ),
+            Text('Connection error, please try again.')
+          ],
+        ),
+      );
+    else
+      return Center(
+        child: CupertinoActivityIndicator(),
+      );
+  }
+
+  Future<bool> _setChannels(BuildContext context) async {
+    List<Channel> items;
     setState(() {
-      _channels = items;
+      _channelsLoaded = null;
     });
+    bool result;
+    try {
+      items = await getRawChannelsData(CHANNELS_URL);
+      result = await _setRecentChannels(items);
+      setState(() {
+        _channels = items;
+        _channelsLoaded = true;
+      });
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Connected to HalaSat TV',
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 1),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _channelsLoaded = false;
+      });
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('You are offline, or not a subsciber of HalaSat',
+            textAlign: TextAlign.center),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.red,
+      ));
+    }
+
     return result;
   }
 
@@ -300,7 +337,6 @@ class ChannelsRowListState extends State<ChannelsRowList>
     rowHeight = box.size.height;
     FocusNode requestingNode = FocusNode();
     if (event is RawKeyDownEvent && event.data is RawKeyEventDataAndroid) {
-      // print('keydown');
       RawKeyDownEvent ev = event;
       RawKeyEventDataAndroid evAndroid = ev.data;
       if (evAndroid.keyCode == 20) {
@@ -344,13 +380,8 @@ class ChannelsRowListState extends State<ChannelsRowList>
               duration: Duration(milliseconds: 200), curve: Curves.easeIn);
         });
       } else if (evAndroid.keyCode == 22) {
-        // print('Right');
-        // print('inFocus cards count:' + inFocusRowCardsNumber.toString());
-        // print('inFocus card index:' + inFocusCardIndex.toString());
         if (inFocusCardIndex == inFocusRowCardsNumber) {
-          // print('last right');
         } else if (inFocusCardIndex < inFocusRowCardsNumber) {
-          // print('right pressed');
           inFocusCardIndex = inFocusCardIndex + 1;
           scrollControllers[inFocusIndex].animateTo(150.0 * inFocusCardIndex,
               duration: Duration(milliseconds: 200), curve: Curves.easeIn);
@@ -387,12 +418,6 @@ class TestScaf extends StatefulWidget {
 }
 
 class TestScafState extends State<TestScaf> with AfterLayoutMixin<TestScaf> {
-  // @override
-  // void afterFirstLayout(BuildContext context){
-  //   Navigator.of(context)
-  //           .pop();
-  // }
-
   @override
   void afterFirstLayout(BuildContext context) {}
 

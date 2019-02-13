@@ -48,12 +48,16 @@ class Auth {
     // Get the updated user
     user = await _auth.currentUser();
 
-    _firestore.collection('users').add({
+    _firestore.collection('users').document(user.uid).setData({
       'name': name,
       'email': email,
       'password': password,
-      'photoUrl': photoUrl
-    }).then(print);
+      'photoUrl': photoUrl,
+      'status': {
+        'privillege': 'none',
+        'verified': false,
+      }
+    });
     return user;
   }
 

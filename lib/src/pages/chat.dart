@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseUser;
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../helpers/check_isp.dart';
+import 'package:flutter/services.dart';
 
 class ChatPage extends StatefulWidget {
   final FirebaseUser user;
@@ -21,15 +21,6 @@ class _ChatPageState extends State<ChatPage> {
 
   String _message;
   Size _size;
-  // bool _isHalasat;
-
-  @override
-  void initState() {
-    // checkIsp().then((bool isHalasat) {
-    //   setState(() => _isHalasat = isHalasat);
-    // });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +29,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildChat(BuildContext context) {
-    // if (isHalasat == true)
     return Flex(
       direction: Axis.vertical,
       children: <Widget>[
@@ -46,23 +36,6 @@ class _ChatPageState extends State<ChatPage> {
         _buildMessageInput(context),
       ],
     );
-    // else if (isHalasat == false)
-    //   return Scaffold(
-    //     appBar: AppBar(
-    //       title: Text('GLOBAL CHAT'),
-    //     ),
-    //     body: Flex(
-    //       direction: Axis.vertical,
-    //       children: <Widget>[
-    //         _buildChatList(context),
-    //         _buildMessageInput(context),
-    //       ],
-    //     ),
-    //   );
-    // else
-    //   return Center(
-    //     child: CupertinoActivityIndicator(),
-    //   );
   }
 
   Widget _buildChatList(BuildContext context) {
@@ -100,45 +73,94 @@ class _ChatPageState extends State<ChatPage> {
         .toLocal();
     String dateString =
         '${date.day}-${date.month}-${date.year} ${date.hour}:${date.minute}';
-    return Container(
-      margin: EdgeInsets.only(right: 5.0, left: 5.0, bottom: 10.0, top: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: CircleAvatar(
-              radius: 25.0,
-              backgroundImage: NetworkImage(message['from']['photo']),
+
+    return GestureDetector(
+      onLongPress: () {
+        Clipboard.setData(ClipboardData(text: message['content']))
+            .then((void v) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            duration: Duration(seconds: 1),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Message copied to clipboard   ',
+                  textAlign: TextAlign.center,
+                ),
+                Icon(
+                  Icons.content_copy,
+                  size: 15.0,
+                  color: Colors.white54,
+                ),
+              ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Text(
-                message['from']['name'],
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: widget.user?.email == message['from']['email']
-                      ? Theme.of(context).accentColor
-                      : Colors.white,
+          ));
+        });
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 5.0, left: 5.0, bottom: 10.0, top: 10.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25.0),
+                child: CachedNetworkImage(
+                  imageUrl: message['from']['photo'],
+                  placeholder: Container(
+                      width: 50.0,
+                      height: 50.0,
+                      child: const CupertinoActivityIndicator()),
+                  errorWidget: Container(child: const Icon(Icons.error)),
+                  fit: BoxFit.cover,
+                  width: 50.0,
+                  height: 50.0,
                 ),
               ),
-              Container(
-                width: (_size.width - 25.0) / 1.2,
-                child: Text(
-                  message['content'],
-                  textDirection: TextDirection.rtl,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text(
+                      message['from']['name'],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: widget.user?.email == message['from']['email']
+                            ? Theme.of(context).accentColor
+                            : Colors.white,
+                      ),
+                    ),
+                    message['from']['verified'] == true
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: Icon(
+                              Icons.check_circle,
+                              color: Colors.blue,
+                              size: 15.0,
+                            ),
+                          )
+                        : Container()
+                  ],
                 ),
-              ),
-              Text(
-                dateString,
-                style: TextStyle(color: Colors.white54, fontSize: 11.0),
-              )
-            ],
-          ),
-        ],
+                Container(
+                  width: (_size.width - 25.0) / 1.2,
+                  child: Text(
+                    message['content'],
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+                Text(
+                  dateString,
+                  style: TextStyle(color: Colors.white54, fontSize: 11.0),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -173,12 +195,18 @@ class _ChatPageState extends State<ChatPage> {
                   if (_message.trim().isNotEmpty)
                     _firestore.collection('messages').add({
                       'content': _message,
-                      'timestamp': DateTime.now(),
+                      'timestamp': DateTime.now().toLocal(),
                       'from': {
                         'name': widget.user.displayName,
                         'photo': widget.user.photoUrl,
                         'email': widget.user.email,
+                        'verified': widget.user.email == 'ms@halasat.com'
+                            ? true
+                            : false,
                       },
+                      'user': _firestore
+                          .collection('users')
+                          .document(widget.user.uid),
                     });
                   _messageInputFormKey.currentState.reset();
                 },
