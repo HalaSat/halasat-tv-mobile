@@ -53,79 +53,92 @@ class _PlayerPageState extends State<PlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(_title),
-        ),
-        body: ListView(physics: BouncingScrollPhysics(), children: <Widget>[
-          Chewie(
-            _controller,
-            aspectRatio: 16 / 9,
-            autoPlay: true,
-            looping: true,
+    return GestureDetector(
+      child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.keyboard_arrow_down),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            title: Text(_title),
           ),
-          Container(
-              margin: EdgeInsets.only(top: 6.0, left: 6.0, bottom: 20.0),
-              child: Row(children: <Widget>[
-                CircleAvatar(
-                  radius: 25.0,
-                  backgroundImage: NetworkImage(_imageUrl),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(_title,
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Opacity(
-                              opacity: .5,
-                              child: Row(children: <Widget>[
-                                Icon(
-                                  Icons.category,
-                                  size: 13,
-                                ),
-                                Text(
-                                  _category.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 13,
+          body: ListView(physics: BouncingScrollPhysics(), children: <Widget>[
+            Chewie(
+              _controller,
+              aspectRatio: 16 / 9,
+              autoPlay: true,
+              looping: true,
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 6.0, left: 6.0, bottom: 20.0),
+                child: Row(children: <Widget>[
+                  CircleAvatar(
+                    radius: 25.0,
+                    backgroundImage: NetworkImage(_imageUrl),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(_title,
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Opacity(
+                                opacity: .5,
+                                child: Row(children: <Widget>[
+                                  Icon(
+                                    Icons.category,
+                                    size: 13,
                                   ),
-                                )
-                              ])),
-                        ])),
-                Expanded(
-                  child: Container(),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                      value: _qualityIndex,
-                      items: [
-                        DropdownMenuItem<int>(
-                          value: 0,
-                          child: Text('AUTO'),
-                        ),
-                        DropdownMenuItem<int>(
-                          value: 1,
-                          child: Text('SD'),
-                        ),
-                        DropdownMenuItem<int>(
-                          value: 2,
-                          child: Text('HD'),
-                        ),
-                      ],
-                      onChanged: (i) => _setQuality(_currentChannel, i),
-                    )))
-              ])),
-          // Divider(),
-          PlayerChannelsRow(
-              category: _category,
-              excerpt: 'Recommended channels',
-              icon: Icons.explore,
-              onCardPressed: _onCardPressed,
-              channels: widget.channels),
-        ]));
+                                  Text(
+                                    _category.toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  )
+                                ])),
+                          ])),
+                  Expanded(
+                    child: Container(),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(right: 15),
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                        value: _qualityIndex,
+                        items: [
+                          DropdownMenuItem<int>(
+                            value: 0,
+                            child: Text('AUTO'),
+                          ),
+                          DropdownMenuItem<int>(
+                            value: 1,
+                            child: Text('SD'),
+                          ),
+                          DropdownMenuItem<int>(
+                            value: 2,
+                            child: Text('HD'),
+                          ),
+                        ],
+                        onChanged: (i) => _setQuality(_currentChannel, i),
+                      )))
+                ])),
+            PlayerChannelsRow(
+                category: _category,
+                excerpt: 'Recommended channels',
+                icon: Icons.explore,
+                onCardPressed: _onCardPressed,
+                channels: widget.channels),
+          ])),
+      onVerticalDragEnd: (DragEndDetails details) {
+        if (details.primaryVelocity > 0) Navigator.of(context).pop();
+        print('\n\nSwipe details:\n\n' +
+            details.velocity.pixelsPerSecond.dy.toString() +
+            '\n\n\n');
+      },
+    );
   }
 
   void _onCardPressed(Channel data, BuildContext context) {

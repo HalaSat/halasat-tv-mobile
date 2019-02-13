@@ -176,9 +176,11 @@ class _ChatPageState extends State<ChatPage> {
             children: <Widget>[
               Expanded(
                 child: TextFormField(
+                  textDirection: TextDirection.rtl,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 10.0)),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(left: 10.0),
+                  ),
                   maxLines: null,
                   maxLengthEnforced: false,
                   textCapitalization: TextCapitalization.sentences,
