@@ -7,12 +7,12 @@ import '../meta/channels.dart';
 import '../models/channel.dart';
 
 Future<List<Channel>> getRawChannelsData(String url) async {
-  // List<Channel> channels;
+  List<Channel> items;
   await http.get(url).then((res) {
     List temp = json.decode((res.body));
-    channels = _buildChannelsList(jsonData: temp);
+    items = _buildChannelsList(jsonData: temp);
   });
-  return channels;
+  return items;
 }
 
 List<Channel> _buildChannelsList({@required List jsonData}) {

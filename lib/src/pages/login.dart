@@ -232,13 +232,15 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   String _emailValidator(String value) {
-    if (value.isEmpty) return 'Email is required';
+    if (value.isEmpty)
+      return 'Email is required';
+    else if (!value.contains('@')) return 'Please enter a valid email';
     return null;
   }
 
   String _passwordValidator(String value) {
     if (value.isEmpty) return 'Password cannot be empty';
-    if (value.length < 6) return 'Password must be more than 6 characters';
+    if (value.length < 8) return 'Password is too short';
     return null;
   }
 }

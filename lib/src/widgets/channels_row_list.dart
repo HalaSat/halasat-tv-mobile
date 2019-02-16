@@ -296,6 +296,7 @@ class ChannelsRowListState extends State<ChannelsRowList>
       setState(() {
         _channelsLoaded = false;
       });
+      print(e);
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('You are offline, or not a subsciber of HalaSat',
             textAlign: TextAlign.center),

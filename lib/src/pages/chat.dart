@@ -104,19 +104,24 @@ class _ChatPageState extends State<ChatPage> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25.0),
-                child: CachedNetworkImage(
-                  imageUrl: message['from']['photo'],
-                  placeholder: Container(
-                      width: 50.0,
-                      height: 50.0,
-                      child: const CupertinoActivityIndicator()),
-                  errorWidget: Container(child: const Icon(Icons.error)),
-                  fit: BoxFit.cover,
-                  width: 50.0,
-                  height: 50.0,
+              child: GestureDetector(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25.0),
+                  child: CachedNetworkImage(
+                    imageUrl: message['from']['photo'],
+                    placeholder: Container(
+                        width: 50.0,
+                        height: 50.0,
+                        child: const CupertinoActivityIndicator()),
+                    errorWidget: Container(child: const Icon(Icons.error)),
+                    fit: BoxFit.cover,
+                    width: 50.0,
+                    height: 50.0,
+                  ),
                 ),
+                onTap: () {
+                  _initPrivateChat(sender: widget.user, message: message);
+                },
               ),
             ),
             Column(
@@ -218,5 +223,20 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _initPrivateChat({FirebaseUser sender, Map message}) async {
+    DocumentReference reciever = message['user'];
+    if (reciever == null) {
+      print('reciever is null');
+    } else
+      reciever.get().then((user) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext context) {
+          return Scaffold(
+              body:
+                  Center(child: Text(sender.displayName + '-' + user['name'])));
+        }));
+      }).catchError((err) => print('ther is errorrrr $err'));
   }
 }
