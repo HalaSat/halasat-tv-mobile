@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 import 'package:scoped_model/scoped_model.dart';
 
+import 'src/models/channels.dart';
 import './src/helpers/auth.dart';
 import './src/models/account.dart';
 import './src/pages/tv.dart';
@@ -10,10 +11,14 @@ import './src/helpers/check_isp.dart';
 
 void main() {
   final AccountModel account = AccountModel();
+  final ChannelsModel channels =ChannelsModel();
 
-  runApp(ScopedModel<AccountModel>(
-    model: account,
-    child: App(),
+  runApp(ScopedModel<ChannelsModel>(
+    model: channels,
+      child: ScopedModel<AccountModel>(
+        model: account,
+        child: App(),
+      ),
   ));
 }
 

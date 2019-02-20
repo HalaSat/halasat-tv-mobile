@@ -17,7 +17,7 @@ class _TvPageState extends State<TvPage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: ChannelsRowList());
+    return ChannelsRowList();
   }
 
   @override

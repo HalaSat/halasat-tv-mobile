@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/channels.dart';
 import '../models/channel.dart';
 
 class ChannelCard extends StatelessWidget {
   final Channel data;
   final bool isLastChild;
-  final onPressed;
+  final Function onPressed;
   final bool hasFocus;
   final Color tvColor = Colors.grey[300];
   final Color phoneColor = Colors.transparent;
@@ -57,16 +59,20 @@ class ChannelCard extends StatelessWidget {
           onTap: () async {
             // create a new instance of shared preferences
             SharedPreferences prefs = await SharedPreferences.getInstance();
+
             // build a list of strings from the dynamic list of recent channel
             List<String> recent = new List<String>.from(
-                // get recent channel if they exist, otherwise return an empty list
-                await prefs.get('recent') ?? List<String>());
+              // get recent channel if they exist, otherwise return an empty list
+              await prefs.get('recent') ?? List<String>(),
+            );
+
             // add the the pressed channel to the recent list
             recent.add(data.id.toString());
+
             // set shared preferences with recent channels
             await prefs.setStringList('recent', recent);
             // call the onPressed callback from channel row
-            onPressed(data, context);
+            onPressed(context, data);
           },
         ));
   }

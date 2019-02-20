@@ -11,7 +11,7 @@ class ChannelsRow extends StatefulWidget {
   final IconData icon;
   final String excerpt;
   final Color iconColor;
-  final onCardPressed;
+  final Function onCardPressed;
   final bool rowHasFocus;
   final int inFocusCardIndex;
   final Function setFocusedChannel;
@@ -125,8 +125,8 @@ class ChannelsRowState extends State<ChannelsRow>
                             : false,
                     data: items[index],
                     isLastChild: isLastChild,
-                    onPressed: (data, context) =>
-                        widget.onCardPressed(data, context),
+                    onPressed: (BuildContext context, Channel data) =>
+                        widget.onCardPressed(context, data),
                   ),
                   focusNode: _rowNodesList[index],
                   onKey: widget.cardPhysicalKeyListener,
@@ -148,8 +148,8 @@ class ChannelsRowState extends State<ChannelsRow>
     }
   }
 
-  // filter channels by category
-  filterChannels(
+  /// Filter channels by category
+  void filterChannels(
       String cat, List<Channel> channels, List<Channel> filteredItems) {
     List<Channel> items =
         channels.where((Channel item) => item.category == cat).toList();
