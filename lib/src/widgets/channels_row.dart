@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:after_layout/after_layout.dart';
 
 import './channel_card.dart';

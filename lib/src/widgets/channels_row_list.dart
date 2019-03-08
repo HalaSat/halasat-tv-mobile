@@ -333,6 +333,7 @@ class ChannelsRowListState extends State<ChannelsRowList>
   }
 
   _onCardPressed(BuildContext context, Channel data) {
+    Navigator.pushReplacementNamed(context, '/');
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => PlayerPage(data, _channels)));
   }
