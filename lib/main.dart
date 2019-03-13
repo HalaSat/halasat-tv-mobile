@@ -54,7 +54,7 @@ class AppState extends State<App> {
           LoginPage.tag: (context) => LoginPage(),
         },
         debugShowCheckedModeBanner: false,
-        title: 'HalaSat TV',
+        title: 'Shashety TV',
         theme: ThemeData(
           accentColor: Colors.pink,
           buttonColor: Colors.pink,
@@ -93,7 +93,7 @@ class AppState extends State<App> {
                   Tab(icon: Icon(Icons.message)),
                 ],
               ),
-              title: Text('HalaSat TV'),
+              title: Text('Shashety TV'),
             ),
             body: TabBarView(
               children: [
